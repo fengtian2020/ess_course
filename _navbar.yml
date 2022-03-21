@@ -1,19 +1,11 @@
-name: "Mywebsite"
-title: "My new website"
+name: "ESS course"
+title: "环境保护与规划"
 type: inverse
 left:
-  - text: "About me"
-    menu:
-      - text: "Learn more about me"
-        href: ./aboutme.html
-  - text: "Project"
-    menu:
-       - text: "Project part 1"
-         href: ./project1.html
-       - text: "Project part 2"
-         href: ./project2.html
-  - text: "Contact"
-    href: ./contact.html
+  - text: "教材章节提要"
+    href: ./book.html
+  - text: "TIMESAT"
+    href: ./timesat.html
 right:
   - icon: fa-github fa-lg
     href: https://github.com/fengtian2020/ess_course

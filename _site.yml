@@ -1,7 +1,8 @@
-name: "My new website"
+name: "环境保护与规划"
 output_dir: 'docs'
 output:
   html_document:
+    css: style.css
     theme: cerulean
     highlight: zenburn
     toc: true

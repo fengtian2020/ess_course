@@ -11,7 +11,7 @@
 
 
 
-<title>My website</title>
+<title>武汉大学遥感学院《环境保护与规划》课程网站</title>
 
 <script src="site_libs/header-attrs-2.12/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +29,10 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -48,6 +49,7 @@
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -212,6 +214,75 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
 
 </head>
 
@@ -219,6 +290,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -231,39 +312,15 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My new website</a>
+      <a class="navbar-brand" href="index.html">环境保护与规划</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    About me
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="./aboutme.html">Learn more about me</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Project
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="./project1.html">Project part 1</a>
-    </li>
-    <li>
-      <a href="./project2.html">Project part 2</a>
-    </li>
-  </ul>
+        <li>
+  <a href="./book.html">教材章节提要</a>
 </li>
 <li>
-  <a href="./contact.html">Contact</a>
+  <a href="./timesat.html">TIMESAT</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -282,30 +339,45 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">My website</h1>
+<h1 class="title toc-ignore">武汉大学遥感学院《环境保护与规划》课程网站</h1>
 
 </div>
 
 
-<p><strong>Welcome to my website!</strong></p>
-<div id="getting-started" class="section level1">
-<h1>Getting started</h1>
-<p>Click the links in the menu above to look around.</p>
+<p><strong>田丰 武汉大学 遥感信息工程学院</strong></p>
+<p>更新时间：2022年3月21日</p>
+<p>欢迎来到《环境保护与规划》课程网站！课程主要面向大二年级第二学期学生，其他年级学生也可选课。</p>
+<div id="网站内容" class="section level1">
+<h1>网站内容</h1>
+<ul>
+<li>课程教学大纲和教学日历</li>
+<li>课程实验指导</li>
+<li>课程相关资源的链接</li>
+</ul>
 </div>
-<div id="notes" class="section level1">
-<h1>Notes</h1>
-<p>This website is a collection of regular (R)Markdown document, so you
-can use all the usual formatting.</p>
-<p>If you are new to R Markdown, you can learn more about it <a
-href="https://rmarkdown.rstudio.com/">on the R Markdown website</a>.</p>
-<p>I also have a discussion of R Markdown and reproducibility <a
-href="https://andreashandel.github.io/MADAcourse/1e_ToolsforReproducibility.html">on
-one of my course pages</a>. You’ll find additional links to potentially
-useful R Markdown (and Github) resources there.</p>
+<div id="课程背景介绍" class="section level1">
+<h1>课程背景介绍</h1>
+<p>武汉大学遥感学院本科生专业选修课“环境保护与规划”从开始招收本科生起，一直由万幼川教授主讲，万教授讲授的内容分为5大部分，包括：遥感在环境中的应用、环境概论、大气污染及污染扩散模型、水质模型与水质信息系统、植被生态模型，后因课时数下调至32个，万教授删减了植被生态模型部分。
+2022年开始，在万教授退休之际，我将课程接手过来，正赶上武汉大学进行2023版本科生培养方案修订，在系里讨论时，有位国际著名的定量遥感学家提出：遥感的学生应该学习地球系统科学相关内容，而目前的课表中没有涉及。系里的老师们都非常赞同，建议将我们这门“环境保护与规划”课程的内容改造成“地球系统科学导论”。我非常荣幸和高兴能承担此任务，地球系统科学是近半个世纪以来随着全球变化而发展起来的学科，与卫星遥感技术和计算机复杂系统模拟紧密关联。随着对全球变化的研究，人们意识到地球不同圈层之间紧密关联、相互影响，要搞清楚全球变化的问题，需建立地球是一个整体的认知模式。同时，对地球系统内各大圈层的认知能够促进遥感技术更好应用于各个地学研究领域，开展深入的学科交叉融合，对今后开展研究工作打下良好基础。
+在调查国内外地球系统科学课程教学的相关情况之后，发现国内鲜有相关的公开课，更多是地质类的课程，而YouTube上有加州大学-欧文分校（UC
+Irvine）开设的地球系统科学导论（ESS 1: Introduction to Earth System
+Science）<a
+href="http://www.infocobuild.com/education/audio-video-courses/earth-environment/ESS1-Fall2013-UCI/lecture-01.html">公开课</a>，任课教师为Julie
+Ferguson教授，教材为《The Blue Planet: An Introduction to Earth System
+Science》，作者 Brian J. Skinner 和 Barbara W.
+Murch，教材可以在武大图书馆阅读电子版，有600多页。我于是进行了系统学习，发现该公开课及教材的质量都很高，非常有趣，且难度和深度均适宜，我从中收获颇多，补上了自己在地球系统科学方面的很多知识漏洞。于是决定以将该课程移植到我的课上来，但是Julie
+Ferguson教授的很多例子都是针对加州和美国的具体情况给出，如果原封不动的照搬过来，对中国学生来说会由于背景知识不足而产生非常晦涩和奇怪的感觉。另外，通过调查本校本科生教学计划，发现学生在大一的时候学过一门“自然地理学”的课程，对地球系统的大气圈、地圈、水圈、生物圈四大圈层已经有过一些介绍。再经过请教系里的教学主任张熠老师和教学副院长龚龑老师，决定以这门公开课和教材为基础，结合自己在植被生态遥感领域的专长，重新设计课程教学内容。由于是公开课和教材是全英文的，很多专业术语，我们的学生课下自学起来会比较吃力，目前又没有现成的译著，我于是打算从书的目录、节要、主要知识点开始，逐章节进行翻译，积累成一本课程讲义。由于是第一次授课，缺乏经验，不当之处请同学们多多包涵，有意见和建议也请不吝赐教，共同完善“地球系统科学导论”（环境保护与规划）这门课。
+再次翻看万幼川教授的课件，发现其第二部分环境概论也很大程度上涉及到了地球系统的四大圈层及环境问题，因此这门课并没有完全脱离之前的内容。</p>
+</div>
+<div id="说明" class="section level1">
+<h1>说明</h1>
+<p>课程内容还在持续更新中……</p>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -338,6 +410,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
