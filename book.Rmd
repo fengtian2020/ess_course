@@ -1,6 +1,6 @@
 ---
 title: "课程教材要点"
-author: "田丰"
+author: "**[田丰](http://jszy.whu.edu.cn/tian_feng/) 武汉大学 遥感信息工程学院**"
 date: "`r Sys.Date()`"
 output: html_document
 editor_options: 
@@ -8,7 +8,7 @@ editor_options:
     wrap: 72
 ---
 
-此文档整理了课程英文教材《The Blue Planet: An Introduction to Earth
+此文档将整理课程英文教材《The Blue Planet: An Introduction to Earth
 System Science》的每章知识点。
 
 # 第一章：地球系统

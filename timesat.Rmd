@@ -1,6 +1,6 @@
 ---
 title: "TIMESAT和MODIS物候分析实验指导"
-author: "田丰"
+author: "**[田丰](http://jszy.whu.edu.cn/tian_feng/) 武汉大学 遥感信息工程学院**"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -8,7 +8,7 @@ output: html_document
 [TIMESAT软件](https://web.nateko.lu.se/timesat/timesat.asp)是由瑞典隆德大学的[Lars Eklundh](https://web.nateko.lu.se/Personal/Lars.Eklundh/)及瑞典马尔默大学的
 [Per Jönsson](https://mau.se/en/persons/per.jonsson/)在大约20年前开发的遥感物候分析工具，被全球遥感界广泛使用。TIMESAT使用[FORTRAN语言](https://baike.baidu.com/item/FORTRAN%E8%AF%AD%E8%A8%80/295590)编写，该语言面向科学计算，相较于其他编程语言，其运算效率号称是最快的。
 
-本页介绍利用TIMESAT软件和MODIS NDVI产品进行物候分析，包括：数据下载、数据准备、数据处理、结果制图、分析整个过程，详细英文教程可以参见[TIMESAT用户手册](/)
+本页介绍利用TIMESAT软件和MODIS NDVI产品进行物候分析，包括：数据下载、数据准备、数据处理、结果制图、分析整个过程，详细英文教程可以参见[TIMESAT用户手册](/)。
 
 # MODIS NDVI 标准产品
 
