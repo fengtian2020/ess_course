@@ -420,6 +420,9 @@ div.tocify {
 <li>
   <a href="./timesat.html">TIMESAT</a>
 </li>
+<li>
+  <a href="./qgis.html">QGIS</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -457,8 +460,11 @@ href="https://baike.baidu.com/item/FORTRAN%E8%AF%AD%E8%A8%80/295590">FORTRAN语�
 <p>本页介绍利用TIMESAT软件和MODIS
 NDVI产品进行物候分析，包括：数据下载、数据准备、数据处理、结果制图、分析整个过程，详细英文教程可以参见<a
 href="/">TIMESAT用户手册</a>。</p>
+<div id="数据下载和预处理" class="section level1">
+<h1><strong>1. 数据下载和预处理</strong></h1>
+</div>
 <div id="modis-ndvi-标准产品" class="section level1">
-<h1>MODIS NDVI 标准产品</h1>
+<h1>1.1 MODIS NDVI 标准产品</h1>
 <p><code>NDVI</code>是<code>MODIS</code>的标准产品之一，包括16天合成和月合成两种时间分辨率、250米/500米/1公里/0.05度四种空间分辨率，网址：<a
 href="https://modis.gsfc.nasa.gov/data/dataprod/mod13.php"
 class="uri">https://modis.gsfc.nasa.gov/data/dataprod/mod13.php</a>，其中<code>MOD13</code>来自上午星<code>TERRA</code>，<code>MYD13</code>来自下午星<code>AQUA</code>。</p>
@@ -477,9 +483,8 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 <center>
 <p><img src="img/AppEEARS.png" width="800"/></p>
 </center>
-</div>
-<div id="appeears-数据下载流程" class="section level1">
-<h1>AppEEARS 数据下载流程</h1>
+<div id="appeears-数据下载流程" class="section level2">
+<h2>1.2 AppEEARS 数据下载流程</h2>
 <p>首先登录账户，点击菜单栏中的<code>Extract</code> →
 <code>Area</code>，然后选择<code>Start a new request</code>。</p>
 <center>
@@ -507,11 +512,11 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 <p><img src="img/modis_download_4.png" width="800"/></p>
 </center>
 </div>
-<div id="数据预处理" class="section level1">
-<h1>数据预处理</h1>
+<div id="数据预处理" class="section level2">
+<h2>1.3 数据预处理</h2>
 <p>下面我们将使用<code>R</code>编程，按照<code>TIMESAT</code>对输入数据的格式要求，对下载<code>MODIS</code>数据进行预处理。</p>
-<div id="文件组织" class="section level2">
-<h2>文件组织</h2>
+<div id="文件组织" class="section level3">
+<h3>文件组织</h3>
 <p>创建一个文件夹进行实验操作，其格式如下：</p>
 <center>
 <p><img src="img/folders_1.png" width="600"/></p>
@@ -522,15 +527,15 @@ pixel
 reliability的tif文件拷贝到<code>..\data\GeoTIFF\QA</code>中。注意这两组数据应一一对应，以我们这个实验为例，NDVI和pixel
 reliability分别有230个文件，从2011年到2021年，每年23个16天合成的数据。</p>
 </div>
-<div id="影像数据格式转换" class="section level2">
-<h2>影像数据格式转换</h2>
+<div id="影像数据格式转换" class="section level3">
+<h3>影像数据格式转换</h3>
 <p>将下载的<code>GeoTIFF</code>数据转成二进制<code>ENVI</code>格式才能输入到<code>TIMESAT</code>中。<code>ENVI</code>软件的数据格式既是二进制+头文件(<code>*.hdr</code>，对二进制文件的解释)。</p>
 <p>这里，我们用<code>R</code>代码进行格式转换。首先，打开<code>RStudio</code>，新建R
 Script文件：</p>
 <center>
 <p><img src="img/r_1.png" width="800"/></p>
 </center>
-<p>将以下代码粘贴到新建的<code>R Script</code>文件中，并保存在<code>Rcode</code>文件夹下。注意根据你的实际情况修改文件路径。运行<code>R</code>文件的方法为：选中要运行的部分，点击右上角的<code>Run</code>图标，或<code>Ctrl + Shit + Enter</code>。</p>
+<p>将以下代码粘贴到新建的<code>R Script</code>文件中，并保存在<code>Rcode</code>文件夹下。注意根据你的实际情况修改文件路径。</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
@@ -574,9 +579,13 @@ Script文件：</p>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/data/QA_list.txt&quot;</span>,</span>
 <span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
 <span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>运行<code>R</code>文件的方法为：选中要运行的部分，点击右上角的<code>Run</code>图标，或<code>Ctrl + Enter</code>：</p>
+<center>
+<p><img src="img/r_2.png" width="800"/></p>
+</center>
 </div>
-<div id="转换后的文件" class="section level2">
-<h2>转换后的文件</h2>
+<div id="转换后的文件" class="section level3">
+<h3>转换后的文件</h3>
 <p>转换完成后，<code>data/ENVI</code>文件夹中应该看到envi格式的NDVI和QA数据，如下图所示：</p>
 <center>
 <p><img src="img/folders_2.png" width="800"/></p>
@@ -593,8 +602,11 @@ Script文件：</p>
 <p>至此，数据准备完成，可以打开matlab运行TIMESAT软件了。</p>
 </div>
 </div>
-<div id="matlab设置" class="section level1">
-<h1>matlab设置</h1>
+</div>
+<div id="运行timesat计算物候参数" class="section level1">
+<h1><strong>2. 运行TIMESAT计算物候参数</strong></h1>
+<div id="matlab设置" class="section level2">
+<h2>2.1 matlab设置</h2>
 <p>将实验文件夹设为工作目录，这里是<code>D:\modis</code>。然后点击<code>Set Path</code>添加<code>TIMESAT</code>软件的路径：</p>
 <center>
 <p><img src="img/matlab_1.png" width="800"/></p>
@@ -614,8 +626,8 @@ Script文件：</p>
 <p><img src="img/matlab_5.png" width="600"/></p>
 </center>
 </div>
-<div id="timesat查看数据和生成设置文件" class="section level1">
-<h1>TIMESAT查看数据和生成设置文件</h1>
+<div id="timesat查看数据和生成设置文件" class="section level2">
+<h2>2.2 TIMESAT查看数据和生成设置文件</h2>
 <p>点击<code>TSM_imageview</code>，打开之后选择<code>File → open file list</code>：</p>
 <center>
 <p><img src="img/view1.png" width="800"/></p>
@@ -648,10 +660,10 @@ Script文件：</p>
 </center>
 <p>检查一下设置，然后就可以保存设置文件到<code>/run</code>文件夹了。这里可以为每一种植被类型(<code>Land cover</code>)设置不同的参数，我们暂且用同一种参数实验。准备好<code>settings</code>文件后，就可以运行处理了。</p>
 </div>
-<div id="timesat执行数据处理" class="section level1">
-<h1>TIMESAT执行数据处理</h1>
-<div id="单核处理" class="section level2">
-<h2>单核处理</h2>
+<div id="timesat执行数据处理" class="section level2">
+<h2>2.3 TIMESAT执行数据处理</h2>
+<div id="单核处理" class="section level3">
+<h3>单核处理</h3>
 <p>点击<code>TSF_process</code>，选择配置文件<code>modis.set</code>：</p>
 <center>
 <p><img src="img/process1.png" width="800"/></p>
@@ -661,8 +673,8 @@ Script文件：</p>
 <p><img src="img/process2.png" width="800"/></p>
 </center>
 </div>
-<div id="并行处理" class="section level2">
-<h2>并行处理</h2>
+<div id="并行处理" class="section level3">
+<h3>并行处理</h3>
 <p>如果数据处理量较大，<code>TIMESAT</code>还提供了并行处理。可以按<code>Ctrl + c</code>停止，然后点击<code>TSF_process parallel</code>，键入想要使用的处理器个数(最好不要把所有的<code>CUP</code>都占用，容易死机)：</p>
 <center>
 <p><img src="img/process3.png" width="800"/></p>
@@ -675,51 +687,96 @@ Script文件：</p>
 <center>
 <p><img src="img/process5.png" width="800"/></p>
 </center>
-<p>处理完成后，<code>/run</code>文件夹中会生成<code>.tts</code>、<code>.tpa</code>、<code>.ndx</code>文件，这是TIMESAT的中间文件，可以用来查看处理结果，经过后处理即可生成<code>ENVI</code>二进制格式的物候参数了。</p>
+<p>处理完成后，<code>/run</code>文件夹中会生成<code>.tts</code>、<code>.tpa</code>、<code>.ndx</code>文件，这是TIMESAT的中间文件，可以用来查看处理结果，经过后处理即可生成<code>ENVI</code>二进制格式的影像结果了。</p>
 <center>
 <p><img src="img/process6.png" width="500"/></p>
 </center>
 </div>
 </div>
+</div>
 <div id="timesat结果查看和后处理" class="section level1">
-<h1>TIMESAT结果查看和后处理</h1>
+<h1><strong>3 TIMESAT结果查看和后处理</strong></h1>
 <div id="生成拟合时间序列影像" class="section level2">
-<h2>生成拟合时间序列影像</h2>
-<p>曲线拟合可以将原始数据中存在云污染等的观测值进行填补，生成时空连续的影像序列，<code>TIMESAT</code>输出拟合之后的时空连续影像操作如下：点击<code>TSF_fit2img</code>：</p>
+<h2>3.1 生成拟合时间序列影像</h2>
+<p>曲线拟合可以将原始数据中存在云污染等的观测值进行填补，生成时空连续的影像序列，可以用<code>TSM_viewfits</code>来查看拟合结果：</p>
 <center>
 <p><img src="img/results1.png" width="800"/></p>
 </center>
-<p>按照提示在<code>cmd</code>窗口中键入参数，生成结果：</p>
+<p><code>TIMESAT</code>输出的拟合结果去除了噪音，具有时空连续性，可以将该结果输出为二进制影像文件，点击<code>TSF_fit2img</code>：</p>
 <center>
 <p><img src="img/results2.png" width="800"/></p>
 </center>
-<p>利用如下<code>R</code>代码生成<code>list</code>文件<code>txt</code>，方便使用·的<code>TSM_imageview</code>查看拟合后的影像(记得根据自己实际情况更改文件路径)：</p>
+<p>按照提示在<code>cmd</code>窗口中键入参数，生成结果：</p>
+<center>
+<p><img src="img/results3.png" width="800"/></p>
+</center>
+<p>现在<code>run</code>文件夹中的文件很多了，为了更清楚的组织文件，我们可以新建文件夹<code>fitted_image/TIMESATout</code>，并把生成拟合影像序列移动过去。</p>
+<p>为了查看拟合后的时空连续的<code>NDVI</code>影像，我们介绍两种方法：</p>
+<ol style="list-style-type: decimal">
+<li>利用如下<code>R</code>代码生成<code>list</code>文件<code>txt</code>，就可以使用<code>TIMESAT</code>的<code>TSM_imageview</code>查看拟合后的影像(记得根据自己实际情况更改文件路径)：</li>
+</ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成TIMESAT读list需要的txt文件</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取影像数据文件的路径列表</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run&quot;</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run/fitted_image/TIMESATout&quot;</span>, </span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;modis_fited_image_&quot;</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备数据列表的list文件，用于TIMESAT读取</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">length</span>(files)  <span class="co"># 影像时间序列个数</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>files_b <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(files, <span class="st">&quot;/&quot;</span>, <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) <span class="co"># 将文件分隔符从“/” 转成 “\”</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">append</span>(<span class="fu">as.character</span>(num), files_b) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/run/modis_fited_image_list.txt&quot;</span>,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<center>
-<p><img src="img/results3.png" width="800"/></p>
-</center>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.hdr&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备数据列表的list文件，用于TIMESAT读取</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">length</span>(files)  <span class="co"># 影像时间序列个数</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>files_b <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(files, <span class="st">&quot;/&quot;</span>, <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) <span class="co"># 将文件分隔符从“/” 转成 “\”</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">append</span>(<span class="fu">as.character</span>(num), files_b) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/run/modis_fited_image_list.txt&quot;</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>给<code>TIMESAT</code>生成的拟合二进制文件添加<code>.hdr</code>头文件，并转成<code>tif</code>，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中<a
+href="">查看影像时间序列</a>。首先在<code>fitted_image</code>文件夹下创建<code>tif</code>文件夹，然后运行下面的<code>R</code>代码：</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将TIMESAT生成的二进制文件图像转换成tif格式</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取影像数据文件的路径列表</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run/fitted_image/TIMESATout&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;modis_fited_image_&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.hdr&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成头文件 -------------------------------------------------------------------</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>outname <span class="ot">&lt;-</span> <span class="fu">paste0</span>(files, <span class="st">&quot;.hdr&quot;</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取原始NDVI数据的头文件</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>hdr <span class="ot">&lt;-</span> <span class="fu">read_file</span>(<span class="st">&quot;D:/modis/run/add.hdr&quot;</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成所有拟合影像文件相应的hdr文件</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span> <span class="fu">length</span>(files))) {</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_file</span>(hdr, outname[i])</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出文件命名，对应到原始NDVI影像的命名方式</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>doy_file_names <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/data/GeoTIFF/NDVI&quot;</span>, <span class="at">pattern =</span> <span class="st">&quot;.tif&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_extract</span>(<span class="st">&quot;doy</span><span class="sc">\\</span><span class="st">d{7}&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">paste0</span>(<span class="st">&quot;_fitted.tif&quot;</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>tif_out_files <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;D:/modis/run/fitted_image/tif/&quot;</span>, doy_file_names)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成拟合后的TIFF格式影像</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(<span class="fu">rast</span>(files), tif_out_files, <span class="at">overwrite =</span> T)</span></code></pre></div>
 </div>
-<div id="生成物候参数影像" class="section level2">
-<h2>生成物候参数影像</h2>
+<div id="生成物候参数结果影像" class="section level2">
+<h2>3.2 生成物候参数结果影像</h2>
+<div id="单个物候参数单个年份引导的方式" class="section level3">
+<h3>单个物候参数、单个年份引导的方式：</h3>
 <p>点击<code>TSF_seas2img</code>生成物候参数影像：</p>
 <center>
 <p><img src="img/postprocess1.png" width="800"/></p>
@@ -732,6 +789,81 @@ Script文件：</p>
 <center>
 <p><img src="img/postprocess3.png" width="800"/></p>
 </center>
+</div>
+<div id="利用.bat文件进行批量生成" class="section level3">
+<h3>利用.bat文件进行批量生成</h3>
+<p><strong>利用上面的步骤可以检查和理解TIMESAT物候参数的输出格式和设计思路：</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>每年最多可以探测出两个生长季，如果每一个像元只有一个生长季，则其第二个季节的物候参数为填充值</p></li>
+<li><p>对于时间类的输出结果，如生长季开始时间<code>start-of-season time</code>
+(<code>SOS</code>)，其结果为整个影像时间序列的序号，而非我们常用的日期或<code>DOY</code>
+(Day of Year，一年中的天数)。</p></li>
+</ol>
+<p>如果要生成多个物候参数、多年的结果，用前面的方式则太过繁琐，对此，我们可以在命令行中一次性的输入上述引导步骤中所需要的所有参数，例如，上图<code>cmd</code>中的过程就可以用一行代码来实现：</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span> TSF_seas2img modis_TS.tpa 1 1 23 <span class="at">-1</span> <span class="at">-2</span> sos_2012 3</span></code></pre></div>
+<p>其中，TSF_seas2img为TIMESAT中的函数，modis_TS.tpa为之前运行TIMESAT计算物候参数后生成的文件，后面数字1表示具体物候参数指标（见下图），之后的数字参数含义也都可以参看上图<code>cmd</code>中引导对话框的内容。</p>
+<center>
+<p><img src="img/bat1.png" width="600"/></p>
+</center>
+<p>因此，每个物候参数、每一年的提取都可以用一行代码来实现，把这些代码穿起来组织成一个<code>.bat</code>文件，就可以像之前进行<code>TIMESAT</code>数据并行处理(<code>TSF_process parallel</code>)那样，利用<code>.bat</code>文件进行物候参数提取的批处理了。我们用下面的<code>R</code>代码来生成这个<code>.bat</code>文件（生成的<code>.bat</code>文件可以用文本编辑器打开，见代码之后的图）：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成批处理的.bat文件，将TIMESAT的物候参数输出为影像</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>cmd <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 对所有物候参数进行循环</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (para <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">10</span>)){ <span class="co"># 将准备提取的物候参数对应的数字填到这里</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 建立物候参数名称和代表值的查找表，对应TIMESAT的物候参数指标</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  pheno <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;sos&quot;</span>,       <span class="co"># Start-of-season time</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;eos&quot;</span>,       <span class="co"># End-of-season time</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;los&quot;</span>,       <span class="co"># Length of season</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;base&quot;</span>,      <span class="co"># Base value</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">&quot;middle&quot;</span>,    <span class="co"># Time of middle of season</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">6</span> <span class="sc">~</span> <span class="st">&quot;maxval&quot;</span>,    <span class="co"># Maximum value value of fitted data</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;amp&quot;</span>,       <span class="co"># Amplitude</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">8</span> <span class="sc">~</span> <span class="st">&quot;lder&quot;</span>,    <span class="co"># Left derivative</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">9</span> <span class="sc">~</span> <span class="st">&quot;rder&quot;</span>,    <span class="co"># Right derivative</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">&quot;integral&quot;</span>, <span class="co"># Large integral</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">11</span> <span class="sc">~</span> <span class="st">&quot;sintegral&quot;</span>,    <span class="co"># Small integral</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">&quot;sosval&quot;</span>,    <span class="co"># Start-of-season value</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">13</span> <span class="sc">~</span> <span class="st">&quot;eosval&quot;</span>,    <span class="co"># End-of-season value</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 对所有年分循环</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (year <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)) {   <span class="co"># 准备提取的年份</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 找出每年23个影像在整个时间序列的位置</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    idx_start <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    idx_end <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">23</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    outname <span class="ot">&lt;-</span> <span class="fu">paste</span>(pheno, year, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 命令行代码</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;TSF_seas2img&quot;</span>, <span class="st">&quot;modis_TS.tpa&quot;</span>, para, idx_start, idx_end, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>, outname, <span class="dv">3</span>, <span class="at">sep =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    cmd <span class="ot">&lt;-</span> <span class="fu">c</span>(cmd, tmp)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(cmd, <span class="st">&quot;D:/modis/run/season2img.bat&quot;</span>)</span></code></pre></div>
+<center>
+<p><img src="img/bat2.png" width="500"/></p>
+</center>
+<p>之后就可以在<code>cmd</code>命令行中输入<code>.bat</code>文件名进行批处理了:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span>season2img.bat</span></code></pre></div>
+<p>运行完成后，你的文件夹中就生成了物候参数的二进制文件，这些二进制影像文件可以使用TIMESAT的<code>TSM_imageview</code>工具来查看了。</p>
+<center>
+<p><img src="img/bat3.png" width="800"/></p>
+</center>
+</div>
+</div>
+<div id="物候参数数据后处理" class="section level2">
+<h2>3.3 物候参数数据后处理</h2>
+<p>首先，我们将提取的物候参数结果移动到一个单独的文件夹中，创建<code>pheno_img/TIMESATout</code>文件夹和子文件夹，将结果移动过来，然后在pheno_img文件夹下创建<code>tif</code>文件夹用来存放tif文件</p>
+<p><code>TIMESAT</code>的<code>SOS</code>和<code>EOS</code>的输出结果是整个时间序列的序号，为此，我们要通过计算将其转换成<code>DOY</code>或是具体的日期。这个步骤看似容易，但实际比较棘手(tricky)，因为有的地方一个完整的生长季可以是跨年的，比如南方的生长季结束时间有可能出现在第二年的2月份。对此，我们将以生长季峰值(<code>Time of middle of season</code>)出现的年份为准，来转换生长季开始(<code>SOS</code>)和结束(<code>EOS</code>)的时间。</p>
 </div>
 </div>
 
