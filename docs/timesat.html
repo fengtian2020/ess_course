@@ -11,11 +11,11 @@
 
 <meta name="author" content="田丰 武汉大学 遥感信息工程学院" />
 
-<meta name="date" content="2022-03-22" />
+<meta name="date" content="2022-03-27" />
 
 <title>TIMESAT和MODIS物候分析实验指导</title>
 
-<script src="site_libs/header-attrs-2.12/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -49,6 +49,100 @@
 
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -347,7 +441,7 @@ div.tocify {
 <h4 class="author"><strong><a
 href="http://jszy.whu.edu.cn/tian_feng/">田丰</a> 武汉大学
 遥感信息工程学院</strong></h4>
-<h4 class="date">2022-03-22</h4>
+<h4 class="date">2022-03-27</h4>
 
 </div>
 
@@ -357,7 +451,8 @@ href="https://web.nateko.lu.se/timesat/timesat.asp">TIMESAT软件</a>是由瑞�
 href="https://web.nateko.lu.se/Personal/Lars.Eklundh/">Lars
 Eklundh</a>及瑞典马尔默大学的 <a
 href="https://mau.se/en/persons/per.jonsson/">Per
-Jönsson</a>在大约20年前开发的遥感物候分析工具，被全球遥感界广泛使用。TIMESAT使用<a
+Jönsson</a>在大约20年前开发的遥感物候分析工具，被全球遥感界广泛使用，最近欧洲哥白尼计划项目下的高分辨率物候和生产力产品<a
+href="https://land.copernicus.eu/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity">HR-VPP</a>就是基于TIMESAT生成的。TIMESAT使用<a
 href="https://baike.baidu.com/item/FORTRAN%E8%AF%AD%E8%A8%80/295590">FORTRAN语言</a>编写，该语言面向科学计算，相较于其他编程语言，其运算效率号称是最快的。</p>
 <p>本页介绍利用TIMESAT软件和MODIS
 NDVI产品进行物候分析，包括：数据下载、数据准备、数据处理、结果制图、分析整个过程，详细英文教程可以参见<a
@@ -390,7 +485,7 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 <center>
 <p><img src="img/modis_download_0.png" width="800"/></p>
 </center>
-<p>选择一个感兴趣区域，可以利用交互式地图选取，这里我们用方框选取从北方草原到南方森林的一个长条地区作为实验区，选择这里纯粹是个人爱好，你也可以选取其他任何区域，但是要注意实验区的面积越大，你处理的数据量也就越大。给自己选定的区域一个名称，这里我们输入<code>modis_course</code>。</p>
+<p>选择一个感兴趣区域，可以利用交互式地图选取，这里我们用方框选取从北方草原到南方森林的一个长条地区作为实验区，选择这里纯粹是个人爱好，你也可以选取其他任何区域，但是要注意：实验区的面积越大，你处理的数据量也就越大。给自己选定的区域一个名称，这里我们输入<code>modis_course</code>。</p>
 <center>
 <p><img src="img/modis_download_1.png" width="800"/></p>
 </center>
@@ -399,7 +494,7 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 <center>
 <p><img src="img/modis_download_2.png" width="800"/></p>
 </center>
-<p><code>pixel_reliability</code>为数据质量概要信息，可以用来过滤掉质量差的数据点（去噪），下图为MOD13用户手册中的介绍：</p>
+<p><code>pixel_reliability</code>为数据质量概要信息，可以用来过滤掉质量差的数据点（去噪），下图为MOD13用户手册中的介绍，我们将使用这个数据作为TIMESAT的QA数据质量文件输入：</p>
 <center>
 <p><img src="img/modis_download_2_1.png" width="600"/></p>
 </center>
@@ -414,7 +509,7 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 </div>
 <div id="数据预处理" class="section level1">
 <h1>数据预处理</h1>
-<p>下面我们将使用R编程，按照TIMESAT对输入数据的格式要求，对下载MODIS数据进行预处理。</p>
+<p>下面我们将使用<code>R</code>编程，按照<code>TIMESAT</code>对输入数据的格式要求，对下载<code>MODIS</code>数据进行预处理。</p>
 <div id="文件组织" class="section level2">
 <h2>文件组织</h2>
 <p>创建一个文件夹进行实验操作，其格式如下：</p>
@@ -425,62 +520,60 @@ href="https://lpdaacsvc.cr.usgs.gov/appeears/">AppEEARS</a></p>
 NDVI的tif文件拷贝到<code>..\data\GeoTIFF\NDVI</code>中，质量标识文件
 pixel
 reliability的tif文件拷贝到<code>..\data\GeoTIFF\QA</code>中。注意这两组数据应一一对应，以我们这个实验为例，NDVI和pixel
-reliability分别有253个文件，从2011年到2021年，每年23个16天合成的数据。</p>
+reliability分别有230个文件，从2011年到2021年，每年23个16天合成的数据。</p>
 </div>
 <div id="影像数据格式转换" class="section level2">
 <h2>影像数据格式转换</h2>
-<p>将下载的GeoTIFF数据转成二进制ENVI格式才能输入到TIMESAT中。ENVI软件的数据格式既是二进制+头文件(<code>*.hdr</code>，对二进制文件的解释)。</p>
-<p>这里，我们用R代码进行格式转换。首先，打开<code>RStudio</code>，新建R
+<p>将下载的<code>GeoTIFF</code>数据转成二进制<code>ENVI</code>格式才能输入到<code>TIMESAT</code>中。<code>ENVI</code>软件的数据格式既是二进制+头文件(<code>*.hdr</code>，对二进制文件的解释)。</p>
+<p>这里，我们用<code>R</code>代码进行格式转换。首先，打开<code>RStudio</code>，新建R
 Script文件：</p>
 <center>
 <p><img src="img/r_1.png" width="800"/></p>
 </center>
-<p>将以下代码粘贴到新建的R
-Script文件中，并保存在<code>Rcode</code>文件夹下。注意根据你的实际情况修改文件路径。</p>
-<pre><code>#加载需要用的软件包
-if (!require(&quot;tidyverse&quot;)) install.packages(&quot;tidyverse&quot;); library(tidyverse)
-if (!require(&quot;terra&quot;)) install.packages(&quot;terra&quot;); library(terra)
-
-# 获取tif数据文件的路径列表
-tif_files &lt;- list.files(path = &quot;D:/modis/data/GeoTIFF&quot;, 
-                        pattern = &quot;.tif&quot;,
-                        full.names = TRUE,
-                        recursive = TRUE)
-
-# 准备envi输出文件的路径列表
-envi_files &lt;- tif_files %&gt;% str_replace(&quot;.tif&quot;, &quot;.envi&quot;) %&gt;% 
-  str_replace(&quot;GeoTIFF&quot;, &quot;ENVI&quot;)
-
-# 读取tif文件为栅格数据
-data &lt;- rast(tif_files)
-
-# 生成envi格式的文件
-writeRaster(data, filename = envi_files)
-
-# 准备envi格式数据列表的list文件，用于TIMESAT读取
-num &lt;- length(envi_files) / 2 # 影像时间序列个数
-
-# 将文件分隔符从“/” 转成 “\”
-envi_files_b &lt;- str_replace_all(envi_files, &quot;/&quot;, &quot;\\\\&quot;) 
-
-# 分别取出 NDVI 和 QA 文件路径列表
-ndvi_envi_files_b &lt;- str_subset(envi_files_b, &quot;NDVI&quot;)
-qa_envi_files_b &lt;- str_subset(envi_files_b, &quot;pixel_reliability&quot;)
-
-#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件
-append(as.character(num), ndvi_envi_files_b) %&gt;% 
-  as.data.frame() %&gt;% 
-  write.table(file = &quot;D:/modis/data/NDVI_list.txt&quot;,
-            sep = &quot;\n&quot;, quote = FALSE, 
-            row.names = FALSE, col.names = FALSE)
-
-#按照TIMESAT要求的格式组织QA list文件，并输出txt文件
-append(as.character(num), qa_envi_files_b) %&gt;% 
-  as.data.frame() %&gt;% 
-  write.table(file = &quot;D:/modis/data/QA_list.txt&quot;,
-              sep = &quot;\n&quot;, quote = FALSE, 
-              row.names = FALSE, col.names = FALSE)
-</code></pre>
+<p>将以下代码粘贴到新建的<code>R Script</code>文件中，并保存在<code>Rcode</code>文件夹下。注意根据你的实际情况修改文件路径。运行<code>R</code>文件的方法为：选中要运行的部分，点击右上角的<code>Run</code>图标，或<code>Ctrl + Shit + Enter</code>。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取tif数据文件的路径列表</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>tif_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/data/GeoTIFF&quot;</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pattern =</span> <span class="st">&quot;.tif&quot;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备envi输出文件的路径列表</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>envi_files <span class="ot">&lt;-</span> tif_files <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">&quot;.tif&quot;</span>, <span class="st">&quot;.envi&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">&quot;GeoTIFF&quot;</span>, <span class="st">&quot;ENVI&quot;</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取tif文件为栅格数据</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rast</span>(tif_files)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成envi格式的文件</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(data, <span class="at">filename =</span> envi_files)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备envi格式数据列表的list文件，用于TIMESAT读取</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">length</span>(envi_files) <span class="sc">/</span> <span class="dv">2</span> <span class="co"># 影像时间序列个数</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 将文件分隔符从“/” 转成 “\”</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>envi_files_b <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(envi_files, <span class="st">&quot;/&quot;</span>, <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 分别取出 NDVI 和 QA 文件路径列表</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>ndvi_envi_files_b <span class="ot">&lt;-</span> <span class="fu">str_subset</span>(envi_files_b, <span class="st">&quot;NDVI&quot;</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>qa_envi_files_b <span class="ot">&lt;-</span> <span class="fu">str_subset</span>(envi_files_b, <span class="st">&quot;pixel_reliability&quot;</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">append</span>(<span class="fu">as.character</span>(num), ndvi_envi_files_b) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/data/NDVI_list.txt&quot;</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#按照TIMESAT要求的格式组织QA list文件，并输出txt文件</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">append</span>(<span class="fu">as.character</span>(num), qa_envi_files_b) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/data/QA_list.txt&quot;</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 <div id="转换后的文件" class="section level2">
 <h2>转换后的文件</h2>
@@ -492,8 +585,8 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/envi_hdr.png" width="800"/></p>
 </center>
-<p><code>data</code>文件夹中会生成两个txt文件，分别为NDVI和pixel_reliability文件的路径列表(list)，会作为TIMESAT软件的输入文件使用。txt文件的第一行为输入数据的总个数，这里是230
-个 = 23个/年 * 10年：</p>
+<p><code>data</code>文件夹中会生成两个<code>txt</code>文件，分别为<code>NDVI</code>和<code>pixel_reliability</code>文件(即<code>TIMESAT</code>中要使用的<code>QA</code>文件)的路径列表(<code>list</code>)，会作为<code>TIMESAT</code>软件的输入文件使用。<code>txt</code>文件的第一行为输入数据的总个数，这里是<code>230</code>个
+= <code>23</code>个/年 * <code>10</code>年：</p>
 <center>
 <p><img src="img/folders_3.png" width="800"/></p>
 </center>
@@ -506,7 +599,7 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/matlab_1.png" width="800"/></p>
 </center>
-<p>选择<code>Add with Subfolders..</code>，导航到timesat33软件的路径，选择<code>timesat_matlab</code>文件夹：</p>
+<p>选择<code>Add with Subfolders..</code>，导航到<code>timesat33</code>软件的路径，选择<code>timesat_matlab</code>文件夹：</p>
 <center>
 <p><img src="img/matlab_2.png" width="800"/></p>
 </center>
@@ -516,7 +609,7 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/matlab_4.png" width="800"/></p>
 </center>
-<p>然后在matlab命令行输入<code>timesat</code>，回车，就可以打开软件界面啦，包含三个模块：</p>
+<p>然后在<code>matlab</code>命令行输入<code>timesat</code>，回车，就可以打开软件界面啦，包含三个模块：</p>
 <center>
 <p><img src="img/matlab_5.png" width="600"/></p>
 </center>
@@ -527,7 +620,7 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/view1.png" width="800"/></p>
 </center>
-<p>选择之前在R中生成的list文件<code>..data/NDVI_list.txt</code>，在TSM_imageview窗口中输入影像的数据类型、行列数，这些信息可以打开任一个ENVI的头文件.hdr获取，填好以后，点击<code>Draw</code>，就可以看到实验区NDVI的空间分布了，在列表中选择任一个时间的文件，点击<code>Draw</code>之后就会更新：</p>
+<p>选择之前在<code>R</code>中生成的<code>list</code>文件<code>..data/NDVI_list.txt</code>，在<code>TSM_imageview</code>窗口中输入影像的数据类型、行列数，这些信息可以打开任一个<code>ENVI</code>的头文件<code>.hdr</code>获取，填好以后，点击<code>Draw</code>，就可以看到实验区<code>NDVI</code>的空间分布了，在列表中选择任一个时间的文件，点击<code>Draw</code>之后就会更新：</p>
 <center>
 <p><img src="img/view2.png" width="800"/></p>
 </center>
@@ -535,11 +628,11 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/view3.png" width="800"/></p>
 </center>
-<p>选择之前在R中生成的NDVI和QA的list文件，配置如下所示：</p>
+<p>选择之前在<code>R</code>中生成的<code>NDVI</code>和<code>QA</code>的<code>list</code>文件，配置如下所示：</p>
 <center>
 <p><img src="img/view4.png" width="600"/></p>
 </center>
-<p>其中，QA用来根据不同数据质量赋予NDVI观测点权重，这里我们把天空晴朗的无云观测(QA值为0)赋予权重为1；把数据质量一般的观测(QA值为1)赋予权重为0.5，有云和雪覆盖的观测(QA值为2-3)赋予权重为0。</p>
+<p>其中，<code>QA</code>用来根据不同数据质量赋予<code>NDVI</code>观测点权重，这里我们把天空晴朗的无云观测(<code>QA</code>值为<code>0</code>)赋予权重为<code>1</code>；把数据质量一般的观测(<code>QA</code>值为<code>1</code>)赋予权重为<code>0.5</code>，有云和雪覆盖的观测(<code>QA</code>值为<code>2-3</code>)赋予权重为<code>0</code>。</p>
 <p>点击<code>Show image</code>可以选择显示时间序列的窗口范围：<code>Rows to process</code>和<code>Columns to process</code>:</p>
 <center>
 <p><img src="img/view5.png" width="600"/></p>
@@ -582,7 +675,7 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <center>
 <p><img src="img/process5.png" width="800"/></p>
 </center>
-<p>处理完成后，<code>/run</code>文件夹中会生成<code>.tts</code>、<code>.tpa</code>、<code>.ndx</code>文件，这是TIMESAT的中间文件，可以用来查看处理结果，经过后处理即可生成ENVI二进制格式的物候参数了。</p>
+<p>处理完成后，<code>/run</code>文件夹中会生成<code>.tts</code>、<code>.tpa</code>、<code>.ndx</code>文件，这是TIMESAT的中间文件，可以用来查看处理结果，经过后处理即可生成<code>ENVI</code>二进制格式的物候参数了。</p>
 <center>
 <p><img src="img/process6.png" width="500"/></p>
 </center>
@@ -592,36 +685,35 @@ append(as.character(num), qa_envi_files_b) %&gt;%
 <h1>TIMESAT结果查看和后处理</h1>
 <div id="生成拟合时间序列影像" class="section level2">
 <h2>生成拟合时间序列影像</h2>
-<p>曲线拟合可以将原始数据中存在云污染等的观测值进行填补，生成时空连续的影像序列，TIMESAT输出拟合之后的时空连续影像操作如下：点击<code>TSF_fit2img</code>：</p>
+<p>曲线拟合可以将原始数据中存在云污染等的观测值进行填补，生成时空连续的影像序列，<code>TIMESAT</code>输出拟合之后的时空连续影像操作如下：点击<code>TSF_fit2img</code>：</p>
 <center>
 <p><img src="img/results1.png" width="800"/></p>
 </center>
-<p>按照提示在cmd窗口中键入参数，生成结果：</p>
+<p>按照提示在<code>cmd</code>窗口中键入参数，生成结果：</p>
 <center>
 <p><img src="img/results2.png" width="800"/></p>
 </center>
-<p>利用如下R代码生成list文件txt方便使用TIMESAT的<code>TSM_imageview</code>查看拟合后的影像(记得根据自己实际情况更改文件路径)：</p>
-<pre><code># 生成TIMESAT读list需要的txt文件
-
-#加载需要用的软件包
-if (!require(&quot;tidyverse&quot;)) install.packages(&quot;tidyverse&quot;); library(tidyverse)
-
-# 获取影像数据文件的路径列表
-files &lt;- list.files(path = &quot;D:/modis/run&quot;, 
-                    pattern = &quot;modis_fited_image_&quot;,
-                    full.names = TRUE)
-
-# 准备数据列表的list文件，用于TIMESAT读取
-num &lt;- length(files)  # 影像时间序列个数
-files_b &lt;- str_replace_all(files, &quot;/&quot;, &quot;\\\\&quot;) # 将文件分隔符从“/” 转成 “\”
-
-#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件
-append(as.character(num), files_b) %&gt;% 
-  as.data.frame() %&gt;% 
-  write.table(file = &quot;D:/modis/run/modis_fited_image_list.txt&quot;,
-              sep = &quot;\n&quot;, quote = FALSE, 
-              row.names = FALSE, col.names = FALSE)
-              </code></pre>
+<p>利用如下<code>R</code>代码生成<code>list</code>文件<code>txt</code>，方便使用·的<code>TSM_imageview</code>查看拟合后的影像(记得根据自己实际情况更改文件路径)：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成TIMESAT读list需要的txt文件</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取影像数据文件的路径列表</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run&quot;</span>, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;modis_fited_image_&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备数据列表的list文件，用于TIMESAT读取</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">length</span>(files)  <span class="co"># 影像时间序列个数</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>files_b <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(files, <span class="st">&quot;/&quot;</span>, <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) <span class="co"># 将文件分隔符从“/” 转成 “\”</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#按照TIMESAT要求的格式组织NDVI list文件，并输出txt文件</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">append</span>(<span class="fu">as.character</span>(num), files_b) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(<span class="at">file =</span> <span class="st">&quot;D:/modis/run/modis_fited_image_list.txt&quot;</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <center>
 <p><img src="img/results3.png" width="800"/></p>
 </center>
