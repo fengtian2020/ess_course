@@ -6,8 +6,12 @@ left:
     href: ./book.html
   - text: "TIMESAT"
     href: ./timesat.html
-  - text: "QGIS"
-    href: ./qgis.html
+  - text: "相关资源"
+    menu:
+    - text: "QGIS"
+      href: ./qgis.html
+    - text: "网络资源"
+      href: ./websites.html
 right:
   - icon: fa-github fa-lg
     href: https://github.com/fengtian2020/ess_course

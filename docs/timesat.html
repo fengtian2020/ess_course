@@ -11,7 +11,7 @@
 
 <meta name="author" content="田丰 武汉大学 遥感信息工程学院" />
 
-<meta name="date" content="2022-03-27" />
+<meta name="date" content="2022-03-28" />
 
 <title>TIMESAT和MODIS物候分析实验指导</title>
 
@@ -420,8 +420,20 @@ div.tocify {
 <li>
   <a href="./timesat.html">TIMESAT</a>
 </li>
-<li>
-  <a href="./qgis.html">QGIS</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    相关资源
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./qgis.html">QGIS</a>
+    </li>
+    <li>
+      <a href="./websites.html">网络资源</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -444,7 +456,7 @@ div.tocify {
 <h4 class="author"><strong><a
 href="http://jszy.whu.edu.cn/tian_feng/">田丰</a> 武汉大学
 遥感信息工程学院</strong></h4>
-<h4 class="date">2022-03-27</h4>
+<h4 class="date">2022-03-28</h4>
 
 </div>
 
@@ -738,7 +750,7 @@ Script文件：</p>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>给<code>TIMESAT</code>生成的拟合二进制文件添加<code>.hdr</code>头文件，并转成<code>tif</code>，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中<a
-href="">查看影像时间序列</a>。首先在<code>fitted_image</code>文件夹下创建<code>tif</code>文件夹，然后运行下面的<code>R</code>代码：</li>
+href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序列</a>。首先，再<code>modis/run</code>目录下创建<code>txt</code>文件，命名为<code>add.hdr</code>，将二进制文件的信息填入，这个可以复制原始的NDVI头文件(路径为：<code>D:\modis\data\ENVI\NDVI</code>)。然后，在<code>fitted_image</code>文件夹下创建<code>tif</code>文件夹，之后运行下面的<code>R</code>代码：</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将TIMESAT生成的二进制文件图像转换成tif格式</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -772,6 +784,145 @@ href="">查看影像时间序列</a>。首先在<code>fitted_image</code>文件�
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成拟合后的TIFF格式影像</span></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(<span class="fu">rast</span>(files), tif_out_files, <span class="at">overwrite =</span> T)</span></code></pre></div>
+<p>下面的<code>R</code>代码可以生成<code>NDVI</code>的空间分布图以及<code>GIF</code>动图：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成拟合后的影像序列动图</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;rasterVis&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;rasterVis&quot;</span>); <span class="fu">library</span>(rasterVis)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;magick&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;magick&quot;</span>); <span class="fu">library</span>(magick)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run/fitted_image/tif&quot;</span>, </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pattern =</span> <span class="st">&quot;.tif&quot;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rast</span>(files) <span class="sc">/</span> <span class="dv">10000</span> <span class="co"># NDVI系数</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>lyrnames <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(<span class="fu">names</span>(data), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{7}&quot;</span>)  <span class="co"># 取出影像的时间</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lyryear <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(<span class="fu">names</span>(data), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{4}&quot;</span>) <span class="co"># 取出年份</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>lyrdoy <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(<span class="fu">names</span>(data), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{3}$&quot;</span>) <span class="co"># 取出day of the year</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data) <span class="ot">&lt;-</span> lyrnames <span class="co"># 把影像序列按时间重命名</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2020年所有doy的图 ----------------------------------------------------------</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建结果输出文件夹</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="st">&quot;D:/modis/figure/2020doy&quot;</span>)<span class="sc">==</span><span class="dv">0</span>)  <span class="fu">dir.create</span>(<span class="st">&quot;D:/modis/figure/2020doy&quot;</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 2020年的影像在整个时间序列中的序号为23*(2020-2012)+1 到 23*(2020-2012) + 24</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="fu">c</span>((<span class="dv">23</span><span class="sc">*</span>(<span class="dv">2020-2012</span>)<span class="sc">+</span><span class="dv">1</span>) <span class="sc">:</span> (<span class="dv">23</span><span class="sc">*</span>(<span class="dv">2020-2012</span>) <span class="sc">+</span> <span class="dv">24</span>))) {</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 每次取一个doy的影像</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  dataplot <span class="ot">&lt;-</span> data[[idx]]</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 重命名为DOY的值</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  doy <span class="ot">&lt;-</span> lyrdoy[idx]</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(dataplot) <span class="ot">&lt;-</span> doy</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">gplot</span>(dataplot) <span class="sc">+</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;NDVI&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.0001</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> doy) <span class="sc">+</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.13</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  pngfile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;D:/modis/figure/2020doy/&quot;</span>, doy, <span class="st">&quot;.png&quot;</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(pngfile, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2020年各DOY(day of year) 的gif动图，用到的是magick package</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/figure/2020doy&quot;</span>, </span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pattern =</span> <span class="st">&quot;.png&quot;</span>,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>                   <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>img_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(imgs, image_read)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="do">## join the images together</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>img_joined <span class="ot">&lt;-</span> <span class="fu">image_join</span>(img_list)</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="do">## animate at 2 frames per second</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>img_animated <span class="ot">&lt;-</span> <span class="fu">image_animate</span>(img_joined, <span class="at">fps =</span> <span class="dv">4</span>)</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="do">## save to disk</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(<span class="at">image =</span> img_animated,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">path =</span> <span class="st">&quot;D:/modis/figure/2020_NDVI.gif&quot;</span>)</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2012-2021年间每年的季节NDVI图 -------------------------------------------------</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="st">&quot;D:/modis/figure/NDVIyear&quot;</span>)<span class="sc">==</span><span class="dv">0</span>)  <span class="fu">dir.create</span>(<span class="st">&quot;D:/modis/figure/NDVIyear&quot;</span>)</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (year <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)) {</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  years <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(lyryear)</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(years <span class="sc">==</span> year)</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  dataplot <span class="ot">&lt;-</span> data[[idx]]</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(dataplot) <span class="ot">&lt;-</span> lyrdoy[idx]</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">gplot</span>(dataplot) <span class="sc">+</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;NDVI&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.0001</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> year) <span class="sc">+</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  pngfile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;D:/modis/figure/year/&quot;</span>, year, <span class="st">&quot;.png&quot;</span>)</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(pngfile,<span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">15</span>)</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/figure/NDVIyear&quot;</span>, </span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;.png&quot;</span>,</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>img_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(imgs, image_read)</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a><span class="do">## join the images together</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>img_joined <span class="ot">&lt;-</span> <span class="fu">image_join</span>(img_list)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a><span class="do">## animate at 2 frames per second</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>img_animated <span class="ot">&lt;-</span> <span class="fu">image_animate</span>(img_joined, <span class="at">fps =</span> <span class="dv">2</span>)</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="do">## save to disk</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(<span class="at">image =</span> img_animated,</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>            <span class="at">path =</span> <span class="st">&quot;D:/modis/figure/year_NDVI.gif&quot;</span>)</span></code></pre></div>
+<p>生成的结果见下图所示：</p>
+<ol style="list-style-type: decimal">
+<li>2020年NDVI变化动图，及其全年展开图</li>
+</ol>
+<center>
+<p><img src="img/2020_NDVI.gif" width="200"/></p>
+</center>
+<center>
+<p><img src="img/2020.png" width="800"/></p>
+</center>
+<ol start="2" style="list-style-type: decimal">
+<li>2012-2021年间NDVI变化总览动图</li>
+</ol>
+<center>
+<p><img src="img/year_NDVI.gif" width="800"/></p>
+</center>
 </div>
 <div id="生成物候参数结果影像" class="section level2">
 <h2>3.2 生成物候参数结果影像</h2>
@@ -800,60 +951,60 @@ href="">查看影像时间序列</a>。首先在<code>fitted_image</code>文件�
 (Day of Year，一年中的天数)。</p></li>
 </ol>
 <p>如果要生成多个物候参数、多年的结果，用前面的方式则太过繁琐，对此，我们可以在命令行中一次性的输入上述引导步骤中所需要的所有参数，例如，上图<code>cmd</code>中的过程就可以用一行代码来实现：</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span> TSF_seas2img modis_TS.tpa 1 1 23 <span class="at">-1</span> <span class="at">-2</span> sos_2012 3</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span> TSF_seas2img modis_TS.tpa 1 1 23 <span class="at">-1</span> <span class="at">-2</span> sos_2012 3</span></code></pre></div>
 <p>其中，TSF_seas2img为TIMESAT中的函数，modis_TS.tpa为之前运行TIMESAT计算物候参数后生成的文件，后面数字1表示具体物候参数指标（见下图），之后的数字参数含义也都可以参看上图<code>cmd</code>中引导对话框的内容。</p>
 <center>
 <p><img src="img/bat1.png" width="600"/></p>
 </center>
 <p>因此，每个物候参数、每一年的提取都可以用一行代码来实现，把这些代码穿起来组织成一个<code>.bat</code>文件，就可以像之前进行<code>TIMESAT</code>数据并行处理(<code>TSF_process parallel</code>)那样，利用<code>.bat</code>文件进行物候参数提取的批处理了。我们用下面的<code>R</code>代码来生成这个<code>.bat</code>文件（生成的<code>.bat</code>文件可以用文本编辑器打开，见代码之后的图）：</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成批处理的.bat文件，将TIMESAT的物候参数输出为影像</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>cmd <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 对所有物候参数进行循环</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (para <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">10</span>)){ <span class="co"># 将准备提取的物候参数对应的数字填到这里</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 建立物候参数名称和代表值的查找表，对应TIMESAT的物候参数指标</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  pheno <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;sos&quot;</span>,       <span class="co"># Start-of-season time</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;eos&quot;</span>,       <span class="co"># End-of-season time</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;los&quot;</span>,       <span class="co"># Length of season</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;base&quot;</span>,      <span class="co"># Base value</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">&quot;middle&quot;</span>,    <span class="co"># Time of middle of season</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">6</span> <span class="sc">~</span> <span class="st">&quot;maxval&quot;</span>,    <span class="co"># Maximum value value of fitted data</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;amp&quot;</span>,       <span class="co"># Amplitude</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">8</span> <span class="sc">~</span> <span class="st">&quot;lder&quot;</span>,    <span class="co"># Left derivative</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">9</span> <span class="sc">~</span> <span class="st">&quot;rder&quot;</span>,    <span class="co"># Right derivative</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">&quot;integral&quot;</span>, <span class="co"># Large integral</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">11</span> <span class="sc">~</span> <span class="st">&quot;sintegral&quot;</span>,    <span class="co"># Small integral</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">&quot;sosval&quot;</span>,    <span class="co"># Start-of-season value</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">13</span> <span class="sc">~</span> <span class="st">&quot;eosval&quot;</span>,    <span class="co"># End-of-season value</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 对所有年分循环</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (year <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)) {   <span class="co"># 准备提取的年份</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 找出每年23个影像在整个时间序列的位置</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    idx_start <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    idx_end <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">23</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    outname <span class="ot">&lt;-</span> <span class="fu">paste</span>(pheno, year, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 命令行代码</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;TSF_seas2img&quot;</span>, <span class="st">&quot;modis_TS.tpa&quot;</span>, para, idx_start, idx_end, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>, outname, <span class="dv">3</span>, <span class="at">sep =</span> <span class="st">&quot; &quot;</span>)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    cmd <span class="ot">&lt;-</span> <span class="fu">c</span>(cmd, tmp)</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(cmd, <span class="st">&quot;D:/modis/run/season2img.bat&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成批处理的.bat文件，将TIMESAT的物候参数输出为影像</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>cmd <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 对所有物候参数进行循环</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (para <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">10</span>)){ <span class="co"># 将准备提取的物候参数对应的数字填到这里</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 建立物候参数名称和代表值的查找表，对应TIMESAT的物候参数指标</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  pheno <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;sos&quot;</span>,       <span class="co"># Start-of-season time</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;eos&quot;</span>,       <span class="co"># End-of-season time</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;los&quot;</span>,       <span class="co"># Length of season</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;base&quot;</span>,      <span class="co"># Base value</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">&quot;middle&quot;</span>,    <span class="co"># Time of middle of season</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">6</span> <span class="sc">~</span> <span class="st">&quot;maxval&quot;</span>,    <span class="co"># Maximum value value of fitted data</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;amp&quot;</span>,       <span class="co"># Amplitude</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">8</span> <span class="sc">~</span> <span class="st">&quot;lder&quot;</span>,    <span class="co"># Left derivative</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">9</span> <span class="sc">~</span> <span class="st">&quot;rder&quot;</span>,    <span class="co"># Right derivative</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">&quot;integral&quot;</span>, <span class="co"># Large integral</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">11</span> <span class="sc">~</span> <span class="st">&quot;sintegral&quot;</span>,    <span class="co"># Small integral</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">&quot;sosval&quot;</span>,    <span class="co"># Start-of-season value</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>              para <span class="sc">==</span> <span class="dv">13</span> <span class="sc">~</span> <span class="st">&quot;eosval&quot;</span>,    <span class="co"># End-of-season value</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 对所有年分循环</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (year <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)) {   <span class="co"># 准备提取的年份</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 找出每年23个影像在整个时间序列的位置</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    idx_start <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    idx_end <span class="ot">&lt;-</span> (year <span class="sc">-</span> <span class="dv">2012</span>) <span class="sc">*</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">23</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    outname <span class="ot">&lt;-</span> <span class="fu">paste</span>(pheno, year, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 命令行代码</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;TSF_seas2img&quot;</span>, <span class="st">&quot;modis_TS.tpa&quot;</span>, para, idx_start, idx_end, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>, outname, <span class="dv">3</span>, <span class="at">sep =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    cmd <span class="ot">&lt;-</span> <span class="fu">c</span>(cmd, tmp)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(cmd, <span class="st">&quot;D:/modis/run/season2img.bat&quot;</span>)</span></code></pre></div>
 <center>
 <p><img src="img/bat2.png" width="500"/></p>
 </center>
 <p>之后就可以在<code>cmd</code>命令行中输入<code>.bat</code>文件名进行批处理了:</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span>season2img.bat</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">D:\modis\run</span><span class="op">&gt;</span>season2img.bat</span></code></pre></div>
 <p>运行完成后，你的文件夹中就生成了物候参数的二进制文件，这些二进制影像文件可以使用TIMESAT的<code>TSM_imageview</code>工具来查看了。</p>
 <center>
 <p><img src="img/bat3.png" width="800"/></p>
@@ -863,7 +1014,407 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="
 <div id="物候参数数据后处理" class="section level2">
 <h2>3.3 物候参数数据后处理</h2>
 <p>首先，我们将提取的物候参数结果移动到一个单独的文件夹中，创建<code>pheno_img/TIMESATout</code>文件夹和子文件夹，将结果移动过来，然后在pheno_img文件夹下创建<code>tif</code>文件夹用来存放tif文件</p>
-<p><code>TIMESAT</code>的<code>SOS</code>和<code>EOS</code>的输出结果是整个时间序列的序号，为此，我们要通过计算将其转换成<code>DOY</code>或是具体的日期。这个步骤看似容易，但实际比较棘手(tricky)，因为有的地方一个完整的生长季可以是跨年的，比如南方的生长季结束时间有可能出现在第二年的2月份。对此，我们将以生长季峰值(<code>Time of middle of season</code>)出现的年份为准，来转换生长季开始(<code>SOS</code>)和结束(<code>EOS</code>)的时间。</p>
+<p><code>TIMESAT</code>的<code>SOS</code>和<code>EOS</code>的输出结果是整个时间序列的序号，为此，我们要通过计算将其转换成<code>DOY</code>或是具体的日期。这个步骤看似容易，但实际比较棘手(tricky)，因为有的地方一个完整的生长季可以是跨年的，比如南方的生长季结束时间有可能出现在第二年的2月份。对此，我们将以生长季峰值(<code>Time of middle of season</code>)出现的年份为准，来转换生长季开始(<code>SOS</code>)和结束(<code>EOS</code>)的时间，<code>R</code>代码如下(这里我们只针对第一个生长季<code>season 1</code>进行操作)：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将TIMESAT生成的二进制文件图像转换成tif格式, </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取影像数据文件的路径列表</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/run/pheno_img/TIMESATout&quot;</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.txt|.hdr&quot;</span>, <span class="at">negate =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;season1&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成头文件 -------------------------------------------------------------------</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># copy原始输入数据ENVI影像的头文件.hdr信息到最近拟合平滑后的二进制文件中</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>outname <span class="ot">&lt;-</span> <span class="fu">paste0</span>(files, <span class="st">&quot;.hdr&quot;</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>hdr <span class="ot">&lt;-</span> <span class="fu">read_file</span>(<span class="st">&quot;D:/modis/run/add.hdr&quot;</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成所有拟合影像文件相应的hdr文件</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span> <span class="fu">length</span>(files))) {</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_file</span>(hdr, outname[i])</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 将season 1的各个参数转换到相应年份的DOY，输出为tif影像文件</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 由于EOS和SOS有可能会跨年，这里以middle of season的年份为准来计算, 取每年影像个数23的余数</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取数据</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>sosfiles <span class="ot">&lt;-</span> files <span class="sc">%&gt;%</span> <span class="fu">str_subset</span>(<span class="st">&quot;sos&quot;</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>sos <span class="ot">&lt;-</span> <span class="fu">rast</span>(sosfiles)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>eosfiles <span class="ot">&lt;-</span> files <span class="sc">%&gt;%</span> <span class="fu">str_subset</span>(<span class="st">&quot;eos&quot;</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>eos <span class="ot">&lt;-</span> <span class="fu">rast</span>(eosfiles)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>losfiles <span class="ot">&lt;-</span> files <span class="sc">%&gt;%</span> <span class="fu">str_subset</span>(<span class="st">&quot;los&quot;</span>)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>los <span class="ot">&lt;-</span> <span class="fu">rast</span>(losfiles)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>middlefiles <span class="ot">&lt;-</span> files <span class="sc">%&gt;%</span> <span class="fu">str_subset</span>(<span class="st">&quot;middle&quot;</span>)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">rast</span>(middlefiles)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>integralfiles <span class="ot">&lt;-</span> files <span class="sc">%&gt;%</span> <span class="fu">str_subset</span>(<span class="st">&quot;integral&quot;</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>integ <span class="ot">&lt;-</span> <span class="fu">rast</span>(integralfiles)</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>midyear <span class="ot">&lt;-</span> mid <span class="sc">%%</span> <span class="dv">23</span> <span class="co"># 返回值为middle of season 所在年份的 </span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>middoy <span class="ot">&lt;-</span> midyear <span class="sc">*</span> <span class="dv">16</span> <span class="co"># 再乘以时间分辨率16天</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>sosdoy <span class="ot">&lt;-</span> (midyear <span class="sc">-</span> (mid <span class="sc">-</span> sos)) <span class="sc">*</span> <span class="dv">16</span> <span class="co"># SOS在middle的左边</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>eosdoy <span class="ot">&lt;-</span> (midyear <span class="sc">+</span> (eos <span class="sc">-</span> mid)) <span class="sc">*</span> <span class="dv">16</span> <span class="co"># SOS在middle的右边</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>losday <span class="ot">&lt;-</span> los <span class="sc">*</span> <span class="dv">16</span> </span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>integscaled <span class="ot">&lt;-</span> integ <span class="sc">/</span> <span class="dv">10000</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出tif文件 -----------------------------------------------------------------</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出文件命名</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>tif_out_files <span class="ot">&lt;-</span> <span class="fu">c</span>(sosfiles, eosfiles, losfiles, integralfiles) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">&quot;TIMESATout&quot;</span>, <span class="st">&quot;tif&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">paste0</span>(<span class="st">&quot;.tif&quot;</span>) </span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成拟合后的TIFF格式影像</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(sosdoy, eosdoy, losday, integscaled) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeRaster</span>(tif_out_files)</span></code></pre></div>
+<p>通过这些操作，我们终于得到了TIMESAT计算的物候参数结果影像<code>modis/run/pheno_img/tif/</code>，本实验选取了<code>SOS</code>,
+<code>EOS</code>, <code>LOS</code>,
+<code>Large integral</code>(NDVI曲线的积分，表征生产力)。之后，就可以分析这些物候参数的时空变化规律了。</p>
+</div>
+</div>
+<div id="物候时空变化分析" class="section level1">
+<h1><strong>4 物候时空变化分析</strong></h1>
+<div id="空间格局" class="section level2">
+<h2>4.1 空间格局</h2>
+<p>物候参数的空间格局可以通过制图进行可视化，下面是利用<code>R</code>制图的一些代码，运行下面代码时，建议首先创建文件夹存放生成的结果，这里为<code>modis/figure</code>(如果上面的步骤中已经创建了这个文件夹，就不用重复创建了)，对每个参数逐个选中运行（或逐行运行）：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;rasterVis&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;rasterVis&quot;</span>); <span class="fu">library</span>(rasterVis)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;magick&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;magick&quot;</span>); <span class="fu">library</span>(magick)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># SOS ---------------------------------------------------------------------</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 文件路径</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>sosfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;sos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取影像文件</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>sos <span class="ot">&lt;-</span> <span class="fu">rast</span>(sosfiles)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(sos) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>) <span class="co"># 重命名为年份</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 利用RasterVis和ggplot2 packages制图</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>psos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(sos[[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]]) <span class="sc">+</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;DOY&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> <span class="st">&quot;SOS&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>psos <span class="co">#在R中输出结果</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 将结果存储到本地文件</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/SOS.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span>)</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co"># EOS ---------------------------------------------------------------------</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>eosfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;eos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>eos <span class="ot">&lt;-</span> <span class="fu">rast</span>(eosfiles)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(eos) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>peos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(eos[[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]]) <span class="sc">+</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;DOY&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">280</span>, <span class="dv">420</span>)) <span class="sc">+</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> <span class="st">&quot;EOS&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>peos <span class="co">#在R中输出结果</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="co"># 将结果存储到本地文件</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/EOS.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span>)</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="co"># LOS ---------------------------------------------------------------------</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>losfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;los&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>los <span class="ot">&lt;-</span> <span class="fu">rast</span>(losfiles)</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(los) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>plos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(los[[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]]) <span class="sc">+</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;days&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">150</span>, <span class="dv">350</span>)) <span class="sc">+</span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> <span class="st">&quot;LOS&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a>plos <span class="co">#在R中输出结果</span></span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a><span class="co"># 将结果存储到本地文件</span></span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/LOS.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span>)</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Integral ---------------------------------------------------------------------</span></span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>integfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;integral&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>integ <span class="ot">&lt;-</span> <span class="fu">rast</span>(integfiles)</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(integ) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>pinteg <span class="ot">&lt;-</span> <span class="fu">gplot</span>(integ[[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]]) <span class="sc">+</span></span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="st">&quot;Integral&quot;</span>, <span class="at">option =</span> <span class="st">&quot;B&quot;</span>, <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Integral&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a>pinteg</span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/small_integral.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span>)</span></code></pre></div>
+<p>可以看出，在选定的实验区内物候参数呈现出了明显的空间格局，北方的草原和南方的林地形成了明显的梯度。</p>
+</div>
+<div id="时间变化" class="section level2">
+<h2>4.2 时间变化</h2>
+<p>利用QGIS可以<a
+href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序列</a>，例如，下图显示位于秦岭的某一像元的生长季长度从2012年到2020年间逐渐缩短：</p>
+<center>
+<p><img src="img/trend.png" width="800"/></p>
+</center>
+<p>我们可以将每年的物候参数和年份时间序列(这里为<code>2012: 2020</code>年)做线性回归
+<code>y = ax + b</code>，其中<code>y</code>为特定的物候参数序列，<code>x</code>为时间序列，得到的斜率<code>a</code>即可以表征物候随时间变化的趋势，具体计算见下面的<code>R</code>代码：</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载需要用的软件包</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;terra&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;terra&quot;</span>); <span class="fu">library</span>(terra)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>); <span class="fu">library</span>(tidyverse)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;rasterVis&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;rasterVis&quot;</span>); <span class="fu">library</span>(rasterVis)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算时间序列变化趋势 y = ax + b</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>caltrend <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  years <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2020</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(<span class="fu">sum</span>(data))) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(data <span class="sc">~</span> years)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    trend <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>coefficients[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(trend)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>sosfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;sos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>sos <span class="ot">&lt;-</span> <span class="fu">rast</span>(sosfiles)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(sos) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>sostrend <span class="ot">&lt;-</span> <span class="fu">app</span>(sos, caltrend, <span class="at">cores =</span> <span class="dv">4</span>) <span class="co">#这里可以更改使用的CPU个数</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(sostrend) <span class="ot">&lt;-</span> <span class="st">&quot;SOS&quot;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>psos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(sostrend <span class="sc">%&gt;%</span> <span class="fu">clamp</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="st">&quot;day/year&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>, </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span> <span class="co">#</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.13</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;npc&quot;</span>)</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>psos</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/SOS_trend.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="co"># EOS ---------------------------------------------------------------------</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>eosfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;eos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>eos <span class="ot">&lt;-</span> <span class="fu">rast</span>(eosfiles)</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(eos) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>eostrend <span class="ot">&lt;-</span> <span class="fu">app</span>(eos, caltrend, <span class="at">cores =</span> <span class="dv">4</span>)</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(eostrend) <span class="ot">&lt;-</span> <span class="st">&quot;EOS&quot;</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>peos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(eostrend <span class="sc">%&gt;%</span> <span class="fu">clamp</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="st">&quot;day/year&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>, </span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span> <span class="co">#</span></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.13</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>peos</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/EOS_trend.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a><span class="co"># LOS ---------------------------------------------------------------------</span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>losfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;los&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a>los <span class="ot">&lt;-</span> <span class="fu">rast</span>(losfiles)</span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(los) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>lostrend <span class="ot">&lt;-</span> <span class="fu">app</span>(los, caltrend, <span class="at">cores =</span> <span class="dv">4</span>)</span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lostrend) <span class="ot">&lt;-</span> <span class="st">&quot;LOS&quot;</span></span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>plos <span class="ot">&lt;-</span> <span class="fu">gplot</span>(lostrend <span class="sc">%&gt;%</span> <span class="fu">clamp</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="st">&quot;day/year&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>, </span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span> <span class="co">#</span></span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.13</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a>plos</span>
+<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/LOS_trend.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a><span class="co"># Integral ---------------------------------------------------------------------</span></span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a>integfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;D:/modis/run/pheno_img/tif&quot;</span>, <span class="at">full.names =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;integral&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">&quot;.aux.xml&quot;</span>, <span class="at">negate =</span> T)</span>
+<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a>integ <span class="ot">&lt;-</span> <span class="fu">rast</span>(integfiles)</span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(integ) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a>integtrend <span class="ot">&lt;-</span> <span class="fu">app</span>(integ, caltrend, <span class="at">cores =</span> <span class="dv">4</span>)</span>
+<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(integtrend) <span class="ot">&lt;-</span> <span class="st">&quot;Integral&quot;</span></span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>pinteg <span class="ot">&lt;-</span> <span class="fu">gplot</span>(integtrend <span class="sc">%&gt;%</span> <span class="fu">clamp</span>(<span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span>)) <span class="sc">+</span></span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> value))<span class="sc">+</span></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="st">&quot;NDVI/year&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>, </span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="cn">NA</span>, <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span>)) <span class="sc">+</span> <span class="co">#</span></span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
+<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">size =</span> <span class="fl">0.2</span>),</span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.13</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;npc&quot;</span>),</span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>pinteg</span>
+<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/Small_Integral_trend.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
+<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以把这些图合并到同一个png文件中</span></span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;ggpubr&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;ggpubr&quot;</span>); <span class="fu">library</span>(ggpubr)</span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(psos, peos, plos, pinteg,</span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>))</span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;D:/modis/figure/Pheno_trend.png&quot;</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">15</span>)</span></code></pre></div>
+<p>生成的物候参数时间变化趋势的结果见下图所示（注：<code>d</code>中的<code>Integral</code>是<code>NDVI</code>的生长季积分）：</p>
+<center>
+<p><img src="img/Pheno_trend.png" width="800"/></p>
+</center>
+</div>
+<div id="气候敏感性分析" class="section level2">
+<h2>4.3 气候敏感性分析</h2>
+<p>年际波动即为不同年份之间的变化，植被物候的变化与气候因子（气温、降雨、辐射等）变化息息相关，通过分析物候参数的年际波动与气候因子变化之间的关系，可以对植被物候变化进行归因，找出背后的主要驱动因素并量化其敏感性。这部分内容一直以来是气候变化领域的重要研究领域，涉及的内容比较庞大，包括植被指数选取、分析方法选择、气象因子的选取和构建等诸多环节，这里我们不再进行一一计算，感兴趣的同学可以查阅相关参考文献，例如：Jin等分析了<a
+href="https://link.springer.com/article/10.1007/s00484-019-01690-5">欧洲北部物候变化的驱动因子</a>，用到了<code>PPI(Plant Phenology Index)</code>，针对<code>NDVI</code>的饱和效应和积雪背景干扰强问题，<code>PPI</code>进行了改进。</p>
+<p><strong>这一问题还可以作为大学生科研项目的选题进行继续探索、研究。</strong></p>
 </div>
 </div>
 

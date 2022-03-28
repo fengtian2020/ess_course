@@ -413,7 +413,7 @@ append(as.character(num), files_b) %>%
               
 ```
 
-2.  给`TIMESAT`生成的拟合二进制文件添加`.hdr`头文件，并转成`tif`，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中[查看影像时间序列]()。首先在`fitted_image`文件夹下创建`tif`文件夹，然后运行下面的`R`代码：
+2.  给`TIMESAT`生成的拟合二进制文件添加`.hdr`头文件，并转成`tif`，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中[查看影像时间序列](https://fengtian2020.github.io/ess_course/qgis.html)。首先，再`modis/run`目录下创建`txt`文件，命名为`add.hdr`，将二进制文件的信息填入，这个可以复制原始的NDVI头文件(路径为：`D:\modis\data\ENVI\NDVI`)。然后，在`fitted_image`文件夹下创建`tif`文件夹，之后运行下面的`R`代码：
 
 ```{r eval=FALSE, include=TRUE}
 # 将TIMESAT生成的二进制文件图像转换成tif格式
@@ -450,6 +450,160 @@ tif_out_files <- paste0("D:/modis/run/fitted_image/tif/", doy_file_names)
 writeRaster(rast(files), tif_out_files, overwrite = T)
 
 ```
+
+下面的`R`代码可以生成`NDVI`的空间分布图以及`GIF`动图：
+
+```{r eval=FALSE, include=TRUE}
+
+# 生成拟合后的影像序列动图
+
+#加载需要用的软件包
+if (!require("terra")) install.packages("terra"); library(terra)
+if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("rasterVis")) install.packages("rasterVis"); library(rasterVis)
+if (!require("magick")) install.packages("magick"); library(magick)
+
+files <- list.files(path = "D:/modis/run/fitted_image/tif", 
+                   pattern = ".tif",
+                   full.names = TRUE) %>% 
+  str_subset(".aux.xml", negate = T)
+data <- rast(files) / 10000 # NDVI系数
+lyrnames <- str_extract(names(data), "\\d{7}")  # 取出影像的时间
+lyryear <- str_extract(names(data), "\\d{4}") # 取出年份
+lyrdoy <- str_extract(names(data), "\\d{3}$") # 取出day of the year
+
+names(data) <- lyrnames # 把影像序列按时间重命名
+
+
+# 生成2020年所有doy的图 ----------------------------------------------------------
+
+# 创建结果输出文件夹
+if (dir.exists("D:/modis/figure/2020doy")==0)  dir.create("D:/modis/figure/2020doy")
+
+# 2020年的影像在整个时间序列中的序号为23*(2020-2012)+1 到 23*(2020-2012) + 24
+for (idx in c((23*(2020-2012)+1) : (23*(2020-2012) + 24))) {
+  # 每次取一个doy的影像
+  dataplot <- data[[idx]]
+  
+  # 重命名为DOY的值
+  doy <- lyrdoy[idx]
+  names(dataplot) <- doy
+  
+  p <- gplot(dataplot) +
+    geom_tile(aes(fill = value))+
+    scale_fill_viridis_c("NDVI", option = "B", na.value = NA, limits = c(-0.0001, 1)) +
+    coord_equal() +
+    scale_x_continuous(expand = c(0, 0)) + 
+    scale_y_continuous(expand = c(0, 0))+
+    labs(x = "", y = "", title = doy) +
+    theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.13, "npc"),
+          legend.key.width = unit(0.05, "npc"),
+    )
+  pngfile <- paste0("D:/modis/figure/2020doy/", doy, ".png")
+  ggsave(pngfile, height = 7, width = 2.5)
+  
+}
+
+# 生成2020年各DOY(day of year) 的gif动图，用到的是magick package
+imgs <- list.files(path = "D:/modis/figure/2020doy", 
+                   pattern = ".png",
+                   full.names = TRUE)
+
+img_list <- lapply(imgs, image_read)
+
+## join the images together
+img_joined <- image_join(img_list)
+
+## animate at 2 frames per second
+img_animated <- image_animate(img_joined, fps = 4)
+
+## save to disk
+image_write(image = img_animated,
+            path = "D:/modis/figure/2020_NDVI.gif")
+
+
+# 生成2012-2021年间每年的季节NDVI图 -------------------------------------------------
+
+if (dir.exists("D:/modis/figure/NDVIyear")==0)  dir.create("D:/modis/figure/NDVIyear")
+
+for (year in c(2012:2021)) {
+  years <- as.numeric(lyryear)
+  idx <- which(years == year)
+  dataplot <- data[[idx]]
+  names(dataplot) <- lyrdoy[idx]
+  
+  p <- gplot(dataplot) +
+    geom_tile(aes(fill = value))+
+    scale_fill_viridis_c("NDVI", option = "B", na.value = NA, limits = c(-0.0001, 1)) +
+    coord_equal() +
+    facet_wrap(~ variable, nrow = 1) +
+    scale_x_continuous(expand = c(0, 0)) + 
+    scale_y_continuous(expand = c(0, 0))+
+    labs(x = "", y = "", title = year) +
+    theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.12, "npc"),
+    )
+  pngfile <- paste0("D:/modis/figure/year/", year, ".png")
+  ggsave(pngfile,height = 6, width = 15)
+  
+}
+
+# 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package
+imgs <- list.files(path = "D:/modis/figure/NDVIyear", 
+                    pattern = ".png",
+                    full.names = TRUE)
+
+img_list <- lapply(imgs, image_read)
+
+## join the images together
+img_joined <- image_join(img_list)
+
+## animate at 2 frames per second
+img_animated <- image_animate(img_joined, fps = 2)
+
+## save to disk
+image_write(image = img_animated,
+            path = "D:/modis/figure/year_NDVI.gif")
+
+```
+
+生成的结果见下图所示：
+
+1.  2020年NDVI变化动图，及其全年展开图
+
+<center>
+
+<img src="img/2020_NDVI.gif" width="200"/>
+
+</center>
+
+
+<center>
+
+<img src="img/2020.png" width="800"/>
+
+</center>
+
+2. 2012-2021年间NDVI变化总览动图
+
+<center>
+
+<img src="img/year_NDVI.gif" width="800"/>
+
+</center>
 
 
 ## 3.2 生成物候参数结果影像
@@ -574,4 +728,426 @@ D:\modis\run>season2img.bat
 
 首先，我们将提取的物候参数结果移动到一个单独的文件夹中，创建`pheno_img/TIMESATout`文件夹和子文件夹，将结果移动过来，然后在pheno_img文件夹下创建`tif`文件夹用来存放tif文件
 
-`TIMESAT`的`SOS`和`EOS`的输出结果是整个时间序列的序号，为此，我们要通过计算将其转换成`DOY`或是具体的日期。这个步骤看似容易，但实际比较棘手(tricky)，因为有的地方一个完整的生长季可以是跨年的，比如南方的生长季结束时间有可能出现在第二年的2月份。对此，我们将以生长季峰值(`Time of middle of season`)出现的年份为准，来转换生长季开始(`SOS`)和结束(`EOS`)的时间。
+`TIMESAT`的`SOS`和`EOS`的输出结果是整个时间序列的序号，为此，我们要通过计算将其转换成`DOY`或是具体的日期。这个步骤看似容易，但实际比较棘手(tricky)，因为有的地方一个完整的生长季可以是跨年的，比如南方的生长季结束时间有可能出现在第二年的2月份。对此，我们将以生长季峰值(`Time of middle of season`)出现的年份为准，来转换生长季开始(`SOS`)和结束(`EOS`)的时间，`R`代码如下(这里我们只针对第一个生长季`season 1`进行操作)：
+
+```{r eval=FALSE, include=TRUE}
+# 将TIMESAT生成的二进制文件图像转换成tif格式, 
+
+#加载需要用的软件包
+if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("terra")) install.packages("terra"); library(terra)
+
+# 获取影像数据文件的路径列表
+files <- list.files(path = "D:/modis/run/pheno_img/TIMESATout",
+                    full.names = TRUE) %>%
+  str_subset(".txt|.hdr", negate = T) %>% 
+  str_subset("season1")
+
+# 生成头文件 -------------------------------------------------------------------
+# copy原始输入数据ENVI影像的头文件.hdr信息到最近拟合平滑后的二进制文件中
+
+outname <- paste0(files, ".hdr")
+
+hdr <- read_file("D:/modis/run/add.hdr")
+
+# 生成所有拟合影像文件相应的hdr文件
+for (i in c(1: length(files))) {
+  write_file(hdr, outname[i])
+}
+
+# 将season 1的各个参数转换到相应年份的DOY，输出为tif影像文件
+# 由于EOS和SOS有可能会跨年，这里以middle of season的年份为准来计算, 取每年影像个数23的余数
+
+# 读取数据
+sosfiles <- files %>% str_subset("sos")
+sos <- rast(sosfiles)
+
+eosfiles <- files %>% str_subset("eos")
+eos <- rast(eosfiles)
+
+losfiles <- files %>% str_subset("los")
+los <- rast(losfiles)
+
+middlefiles <- files %>% str_subset("middle")
+mid <- rast(middlefiles)
+
+integralfiles <- files %>% str_subset("integral")
+integ <- rast(integralfiles)
+
+midyear <- mid %% 23 # 返回值为middle of season 所在年份的 
+middoy <- midyear * 16 # 再乘以时间分辨率16天
+
+sosdoy <- (midyear - (mid - sos)) * 16 # SOS在middle的左边
+eosdoy <- (midyear + (eos - mid)) * 16 # SOS在middle的右边
+losday <- los * 16 
+integscaled <- integ / 10000
+
+
+# 输出tif文件 -----------------------------------------------------------------
+
+# 输出文件命名
+tif_out_files <- c(sosfiles, eosfiles, losfiles, integralfiles) %>% 
+  str_replace("TIMESATout", "tif") %>% paste0(".tif") 
+
+# 生成拟合后的TIFF格式影像
+c(sosdoy, eosdoy, losday, integscaled) %>% 
+  writeRaster(tif_out_files)
+
+```
+
+通过这些操作，我们终于得到了TIMESAT计算的物候参数结果影像`modis/run/pheno_img/tif/`，本实验选取了`SOS`, `EOS`, `LOS`, `Large integral`(NDVI曲线的积分，表征生产力)。之后，就可以分析这些物候参数的时空变化规律了。
+
+# **4 物候时空变化分析**
+
+## 4.1 空间格局
+
+物候参数的空间格局可以通过制图进行可视化，下面是利用`R`制图的一些代码，运行下面代码时，建议首先创建文件夹存放生成的结果，这里为`modis/figure`(如果上面的步骤中已经创建了这个文件夹，就不用重复创建了)，对每个参数逐个选中运行（或逐行运行）：
+
+```{r eval=FALSE, include=TRUE}
+#加载需要用的软件包
+if (!require("terra")) install.packages("terra"); library(terra)
+if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("rasterVis")) install.packages("rasterVis"); library(rasterVis)
+if (!require("magick")) install.packages("magick"); library(magick)
+
+# SOS ---------------------------------------------------------------------
+
+# 文件路径
+sosfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("sos") %>% 
+  str_subset(".aux.xml", negate = T)
+
+# 读取影像文件
+sos <- rast(sosfiles)
+names(sos) <- c(2012:2021) # 重命名为年份
+
+# 利用RasterVis和ggplot2 packages制图
+psos <- gplot(sos[[1:9]]) +
+  geom_tile(aes(fill = value))+
+  scale_fill_viridis_c("DOY", option = "B", na.value = NA, limits = c(40, 200)) +
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "", title = "SOS") +
+  theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.12, "npc"),
+  )
+
+psos #在R中输出结果
+
+# 将结果存储到本地文件
+ggsave("D:/modis/figure/SOS.png", height = 7, width = 10)
+
+
+# EOS ---------------------------------------------------------------------
+
+eosfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("eos") %>% 
+  str_subset(".aux.xml", negate = T)
+
+eos <- rast(eosfiles)
+names(eos) <- c(2012:2021)
+
+
+peos <- gplot(eos[[1:9]]) +
+  geom_tile(aes(fill = value))+
+  scale_fill_viridis_c("DOY", option = "B", na.value = NA, limits = c(280, 420)) +
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "", title = "EOS") +
+  theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.12, "npc"),
+  )
+
+peos #在R中输出结果
+
+# 将结果存储到本地文件
+ggsave("D:/modis/figure/EOS.png", height = 7, width = 10)
+
+
+# LOS ---------------------------------------------------------------------
+
+losfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("los") %>% 
+  str_subset(".aux.xml", negate = T)
+
+los <- rast(losfiles)
+names(los) <- c(2012:2021)
+
+
+plos <- gplot(los[[1:9]]) +
+  geom_tile(aes(fill = value))+
+  scale_fill_viridis_c("days", option = "B", na.value = NA, limits = c(150, 350)) +
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "", title = "LOS") +
+  theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.12, "npc"),
+  )
+
+plos #在R中输出结果
+
+# 将结果存储到本地文件
+ggsave("D:/modis/figure/LOS.png", height = 7, width = 10)
+
+# Integral ---------------------------------------------------------------------
+
+integfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("integral") %>% 
+  str_subset(".aux.xml", negate = T)
+
+integ <- rast(integfiles)
+names(integ) <- c(2012:2021)
+
+
+pinteg <- gplot(integ[[1:9]]) +
+  geom_tile(aes(fill = value))+
+  scale_fill_viridis_c("Integral", option = "B", na.value = NA, limits = c(1, 18)) +
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "", title = "Integral") +
+  theme_bw(base_size = 16) +
+    theme(panel.grid = element_blank(), 
+          panel.border = element_rect(size = 0.2),
+          strip.background = element_blank(),
+          strip.text = element_text(hjust = 0, size = 16),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.key.height = unit(0.12, "npc"),
+  )
+
+pinteg
+
+ggsave("D:/modis/figure/small_integral.png", height = 7, width = 10)
+
+```
+
+可以看出，在选定的实验区内物候参数呈现出了明显的空间格局，北方的草原和南方的林地形成了明显的梯度。
+
+## 4.2 时间变化
+
+利用QGIS可以[查看影像时间序列](https://fengtian2020.github.io/ess_course/qgis.html)，例如，下图显示位于秦岭的某一像元的生长季长度从2012年到2020年间逐渐缩短：
+
+<center>
+
+<img src="img/trend.png" width="800"/>
+
+</center>
+
+我们可以将每年的物候参数和年份时间序列(这里为`2012: 2020`年)做线性回归 `y = ax + b`，其中`y`为特定的物候参数序列，`x`为时间序列，得到的斜率`a`即可以表征物候随时间变化的趋势，具体计算见下面的`R`代码：
+
+```{r eval=FALSE, include=TRUE}
+#加载需要用的软件包
+if (!require("terra")) install.packages("terra"); library(terra)
+if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("rasterVis")) install.packages("rasterVis"); library(rasterVis)
+
+# 计算时间序列变化趋势 y = ax + b
+caltrend <- function(x) {
+  years <- c(2012:2020)
+  data <- x[1:9]
+  if (is.na(sum(data))) {
+    return(NA)
+  } else {
+    fit <- lm(data ~ years)
+    trend <- summary(fit)$coefficients[2,1]
+    return(trend)
+  }
+}
+
+sosfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("sos") %>% 
+  str_subset(".aux.xml", negate = T)
+
+sos <- rast(sosfiles)
+names(sos) <- c(2012:2021)
+
+sostrend <- app(sos, caltrend, cores = 4) #这里可以更改使用的CPU个数
+names(sostrend) <- "SOS"
+
+psos <- gplot(sostrend %>% clamp(-5, 5)) +
+  geom_tile(aes(fill = value))+
+  scale_fill_distiller("day/year", palette = "RdYlBu", 
+                       na.value = NA, limits=c(-5, 5)) + #
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(size = 0.2),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 16),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.key.height = unit(0.13, "npc"),
+        legend.key.width = unit(0.05, "npc")
+  )
+
+psos
+
+ggsave("D:/modis/figure/SOS_trend.png", height = 7, width = 2.5)
+
+
+# EOS ---------------------------------------------------------------------
+
+eosfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("eos") %>% 
+  str_subset(".aux.xml", negate = T)
+
+eos <- rast(eosfiles)
+names(eos) <- c(2012:2021)
+
+eostrend <- app(eos, caltrend, cores = 4)
+names(eostrend) <- "EOS"
+
+peos <- gplot(eostrend %>% clamp(-5, 5)) +
+  geom_tile(aes(fill = value))+
+  scale_fill_distiller("day/year", palette = "RdYlBu", 
+                       na.value = NA, limits=c(-5, 5)) + #
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(size = 0.2),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 16),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.key.height = unit(0.13, "npc"),
+        legend.key.width = unit(0.05, "npc"),
+  )
+
+peos
+
+ggsave("D:/modis/figure/EOS_trend.png", height = 7, width = 2.5)
+
+# LOS ---------------------------------------------------------------------
+
+losfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("los") %>% 
+  str_subset(".aux.xml", negate = T)
+
+los <- rast(losfiles)
+names(los) <- c(2012:2021)
+
+lostrend <- app(los, caltrend, cores = 4)
+names(lostrend) <- "LOS"
+
+plos <- gplot(lostrend %>% clamp(-5, 5)) +
+  geom_tile(aes(fill = value))+
+  scale_fill_distiller("day/year", palette = "RdYlBu", 
+                       na.value = NA, limits=c(-5, 5)) + #
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(size = 0.2),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 16),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.key.height = unit(0.13, "npc"),
+        legend.key.width = unit(0.05, "npc"),
+  )
+
+plos
+
+ggsave("D:/modis/figure/LOS_trend.png", height = 7, width = 2.5)
+
+# Integral ---------------------------------------------------------------------
+
+integfiles <- list.files("D:/modis/run/pheno_img/tif", full.names = T) %>% 
+  str_subset("integral") %>% 
+  str_subset(".aux.xml", negate = T)
+
+integ <- rast(integfiles)
+names(integ) <- c(2012:2021)
+
+integtrend <- app(integ, caltrend, cores = 4)
+names(integtrend) <- "Integral"
+
+pinteg <- gplot(integtrend %>% clamp(-0.25, 0.25)) +
+  geom_tile(aes(fill = value))+
+  scale_fill_distiller("NDVI/year", palette = "RdYlBu", 
+                       na.value = NA, limits=c(-0.25, 0.25)) + #
+  coord_equal() +
+  facet_wrap(~ variable, nrow = 1) +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))+
+  labs(x = "", y = "") +
+  theme_bw(base_size = 16) +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(size = 0.2),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 16),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.key.height = unit(0.13, "npc"),
+        legend.key.width = unit(0.05, "npc"),
+  )
+
+pinteg
+
+ggsave("D:/modis/figure/Small_Integral_trend.png", height = 7, width = 2.5)
+
+# 可以把这些图合并到同一个png文件中
+if (!require("ggpubr")) install.packages("ggpubr"); library(ggpubr)
+ggarrange(psos, peos, plos, pinteg,
+          ncol = 4, nrow = 1,
+          labels = c("a", "b", "c", "d"))
+
+ggsave("D:/modis/figure/Pheno_trend.png", height = 7, width = 15)
+
+```
+
+生成的物候参数时间变化趋势的结果见下图所示（注：`d`中的`Integral`是`NDVI`的生长季积分）：
+
+<center>
+
+<img src="img/Pheno_trend.png" width="800"/>
+
+</center>
+
+
+
+
+## 4.3 气候敏感性分析
+
+年际波动即为不同年份之间的变化，植被物候的变化与气候因子（气温、降雨、辐射等）变化息息相关，通过分析物候参数的年际波动与气候因子变化之间的关系，可以对植被物候变化进行归因，找出背后的主要驱动因素并量化其敏感性。这部分内容一直以来是气候变化领域的重要研究领域，涉及的内容比较庞大，包括植被指数选取、分析方法选择、气象因子的选取和构建等诸多环节，这里我们不再进行一一计算，感兴趣的同学可以查阅相关参考文献，例如：Jin等分析了[欧洲北部物候变化的驱动因子](https://link.springer.com/article/10.1007/s00484-019-01690-5)，用到了`PPI(Plant Phenology Index)`，针对`NDVI`的饱和效应和积雪背景干扰强问题，`PPI`进行了改进。
+
+**这一问题还可以作为大学生科研项目的选题进行继续探索、研究。**
+
+
