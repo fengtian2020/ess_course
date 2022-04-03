@@ -11,7 +11,7 @@
 
 <meta name="author" content="田丰 武汉大学 遥感信息工程学院" />
 
-<meta name="date" content="2022-03-28" />
+<meta name="date" content="2022-04-03" />
 
 <title>TIMESAT和MODIS物候分析实验指导</title>
 
@@ -456,7 +456,7 @@ div.tocify {
 <h4 class="author"><strong><a
 href="http://jszy.whu.edu.cn/tian_feng/">田丰</a> 武汉大学
 遥感信息工程学院</strong></h4>
-<h4 class="date">2022-03-28</h4>
+<h4 class="date">2022-04-03</h4>
 
 </div>
 
@@ -750,7 +750,7 @@ Script文件：</p>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>给<code>TIMESAT</code>生成的拟合二进制文件添加<code>.hdr</code>头文件，并转成<code>tif</code>，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中<a
-href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序列</a>。首先，再<code>modis/run</code>目录下创建<code>txt</code>文件，命名为<code>add.hdr</code>，将二进制文件的信息填入，这个可以复制原始的NDVI头文件(路径为：<code>D:\modis\data\ENVI\NDVI</code>)。然后，在<code>fitted_image</code>文件夹下创建<code>tif</code>文件夹，之后运行下面的<code>R</code>代码：</li>
+href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序列</a>。首先，再<code>modis/run</code>目录下创建<code>txt</code>文件，命名为<code>add.hdr</code>，将二进制文件的信息填入，这个可以复制原始的NDVI头文件内容(路径为：<code>D:\modis\data\ENVI\NDVI</code>)。然后，在<code>fitted_image</code>文件夹下创建<code>tif</code>文件夹，之后运行下面的<code>R</code>代码：</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将TIMESAT生成的二进制文件图像转换成tif格式</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -840,7 +840,7 @@ href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序
 <span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(pngfile, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="fl">2.5</span>)</span>
 <span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> </span>
 <span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2020年各DOY(day of year) 的gif动图，用到的是magick package</span></span>
 <span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/figure/2020doy&quot;</span>, </span>
 <span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pattern =</span> <span class="st">&quot;.png&quot;</span>,</span>
@@ -886,27 +886,28 @@ href="https://fengtian2020.github.io/ess_course/qgis.html">查看影像时间序
 <span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.12</span>, <span class="st">&quot;npc&quot;</span>),</span>
 <span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  pngfile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;D:/modis/figure/year/&quot;</span>, year, <span class="st">&quot;.png&quot;</span>)</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  pngfile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;D:/modis/figure/NDVIyear/&quot;</span>, year, <span class="st">&quot;.png&quot;</span>)</span>
 <span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(pngfile,<span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">15</span>)</span>
 <span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package</span></span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/figure/NDVIyear&quot;</span>, </span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;.png&quot;</span>,</span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>img_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(imgs, image_read)</span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a><span class="do">## join the images together</span></span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>img_joined <span class="ot">&lt;-</span> <span class="fu">image_join</span>(img_list)</span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a><span class="do">## animate at 2 frames per second</span></span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>img_animated <span class="ot">&lt;-</span> <span class="fu">image_animate</span>(img_joined, <span class="at">fps =</span> <span class="dv">2</span>)</span>
-<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="do">## save to disk</span></span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(<span class="at">image =</span> img_animated,</span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>            <span class="at">path =</span> <span class="st">&quot;D:/modis/figure/year_NDVI.gif&quot;</span>)</span></code></pre></div>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>y</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package</span></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;D:/modis/figure/NDVIyear&quot;</span>, </span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pattern =</span> <span class="st">&quot;.png&quot;</span>,</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>img_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(imgs, image_read)</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a><span class="do">## join the images together</span></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>img_joined <span class="ot">&lt;-</span> <span class="fu">image_join</span>(img_list)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="do">## animate at 2 frames per second</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>img_animated <span class="ot">&lt;-</span> <span class="fu">image_animate</span>(img_joined, <span class="at">fps =</span> <span class="dv">2</span>)</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="do">## save to disk</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(<span class="at">image =</span> img_animated,</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>            <span class="at">path =</span> <span class="st">&quot;D:/modis/figure/year_NDVI.gif&quot;</span>)</span></code></pre></div>
 <p>生成的结果见下图所示：</p>
 <ol style="list-style-type: decimal">
 <li>2020年NDVI变化动图，及其全年展开图</li>

@@ -413,7 +413,7 @@ append(as.character(num), files_b) %>%
               
 ```
 
-2.  给`TIMESAT`生成的拟合二进制文件添加`.hdr`头文件，并转成`tif`，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中[查看影像时间序列](https://fengtian2020.github.io/ess_course/qgis.html)。首先，再`modis/run`目录下创建`txt`文件，命名为`add.hdr`，将二进制文件的信息填入，这个可以复制原始的NDVI头文件(路径为：`D:\modis\data\ENVI\NDVI`)。然后，在`fitted_image`文件夹下创建`tif`文件夹，之后运行下面的`R`代码：
+2.  给`TIMESAT`生成的拟合二进制文件添加`.hdr`头文件，并转成`tif`，这样就可以用其他软件(比如ENVI和GIS软件等)进行查看了，比如，在QGIS中[查看影像时间序列](https://fengtian2020.github.io/ess_course/qgis.html)。首先，再`modis/run`目录下创建`txt`文件，命名为`add.hdr`，将二进制文件的信息填入，这个可以复制原始的NDVI头文件内容(路径为：`D:\modis\data\ENVI\NDVI`)。然后，在`fitted_image`文件夹下创建`tif`文件夹，之后运行下面的`R`代码：
 
 ```{r eval=FALSE, include=TRUE}
 # 将TIMESAT生成的二进制文件图像转换成tif格式
@@ -510,7 +510,7 @@ for (idx in c((23*(2020-2012)+1) : (23*(2020-2012) + 24))) {
   ggsave(pngfile, height = 7, width = 2.5)
   
 }
-
+y <- 
 # 生成2020年各DOY(day of year) 的gif动图，用到的是magick package
 imgs <- list.files(path = "D:/modis/figure/2020doy", 
                    pattern = ".png",
@@ -556,10 +556,11 @@ for (year in c(2012:2021)) {
           axis.text = element_blank(),
           legend.key.height = unit(0.12, "npc"),
     )
-  pngfile <- paste0("D:/modis/figure/year/", year, ".png")
+  pngfile <- paste0("D:/modis/figure/NDVIyear/", year, ".png")
   ggsave(pngfile,height = 6, width = 15)
   
 }
+y
 
 # 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package
 imgs <- list.files(path = "D:/modis/figure/NDVIyear", 
