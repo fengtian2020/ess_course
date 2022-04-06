@@ -3,6 +3,8 @@ title: "TIMESAT和MODIS物候分析实验指导"
 author: '**[田丰](http://jszy.whu.edu.cn/tian_feng/) 武汉大学 遥感信息工程学院**'
 date: "`r Sys.Date()`"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 [TIMESAT软件](https://web.nateko.lu.se/timesat/timesat.asp)是由瑞典隆德大学的[Lars Eklundh](https://web.nateko.lu.se/Personal/Lars.Eklundh/)及瑞典马尔默大学的 [Per Jönsson](https://mau.se/en/persons/per.jonsson/)在大约20年前开发的遥感物候分析工具，被全球遥感界广泛使用，最近欧洲哥白尼计划项目下的高分辨率物候和生产力产品[HR-VPP](https://land.copernicus.eu/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity)就是基于TIMESAT生成的。TIMESAT使用[FORTRAN语言](https://baike.baidu.com/item/FORTRAN%E8%AF%AD%E8%A8%80/295590)编写，该语言面向科学计算，相较于其他编程语言，其运算效率号称是最快的。
@@ -126,7 +128,8 @@ if (!require("terra")) install.packages("terra"); library(terra)
 tif_files <- list.files(path = "D:/modis/data/GeoTIFF", 
                         pattern = ".tif",
                         full.names = TRUE,
-                        recursive = TRUE)
+                        recursive = TRUE) %>% 
+  str_subset(".aux.xml", negate = TRUE) # 排除不想要的文件，比如.aux.xml为QGIS打开影像后自动生成的辅助文件
 
 # 准备envi输出文件的路径列表
 envi_files <- tif_files %>% str_replace(".tif", ".envi") %>% 
@@ -136,7 +139,7 @@ envi_files <- tif_files %>% str_replace(".tif", ".envi") %>%
 data <- rast(tif_files)
 
 # 生成envi格式的文件
-writeRaster(data, filename = envi_files)
+writeRaster(data, filename = envi_files, overwrite = TRUE)
 
 # 准备envi格式数据列表的list文件，用于TIMESAT读取
 num <- length(envi_files) / 2 # 影像时间序列个数
@@ -170,7 +173,6 @@ append(as.character(num), qa_envi_files_b) %>%
 <img src="img/r_2.png" width="800"/>
 
 </center>
-
 
 ### 转换后的文件
 
@@ -398,7 +400,7 @@ if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
 files <- list.files(path = "D:/modis/run/fitted_image/TIMESATout", 
                     pattern = "modis_fited_image_",
                     full.names = TRUE) %>% 
-  str_subset(".hdr", negate = T)
+  str_subset(".hdr", negate = T) # 排除不想要的hdr头文件
 
 # 准备数据列表的list文件，用于TIMESAT读取
 num <- length(files)  # 影像时间序列个数
@@ -426,7 +428,7 @@ if (!require("terra")) install.packages("terra"); library(terra)
 files <- list.files(path = "D:/modis/run/fitted_image/TIMESATout",
                     pattern = "modis_fited_image_",
                     full.names = TRUE) %>%
-  str_subset(".hdr", negate = T)
+  str_subset(".hdr", negate = T) # 排除不想要的hdr文件
 
 # 生成头文件 -------------------------------------------------------------------
 
@@ -442,6 +444,7 @@ for (i in c(1: length(files))) {
 
 # 输出文件命名，对应到原始NDVI影像的命名方式
 doy_file_names <- list.files("D:/modis/data/GeoTIFF/NDVI", pattern = ".tif") %>% 
+  str_subset(".aux.xml", negate = TRUE) %>% # 排除不想要的文件，比如.aux.xml为QGIS打开影像后自动生成的辅助文件
   str_extract("doy\\d{7}") %>% paste0("_fitted.tif")
 
 tif_out_files <- paste0("D:/modis/run/fitted_image/tif/", doy_file_names)
@@ -466,11 +469,11 @@ if (!require("magick")) install.packages("magick"); library(magick)
 files <- list.files(path = "D:/modis/run/fitted_image/tif", 
                    pattern = ".tif",
                    full.names = TRUE) %>% 
-  str_subset(".aux.xml", negate = T)
+  str_subset(".aux.xml", negate = T) # 排除不想要的文件，比如.aux.xml为QGIS打开影像后自动生成的辅助文件
 data <- rast(files) / 10000 # NDVI系数
-lyrnames <- str_extract(names(data), "\\d{7}")  # 取出影像的时间
-lyryear <- str_extract(names(data), "\\d{4}") # 取出年份
-lyrdoy <- str_extract(names(data), "\\d{3}$") # 取出day of the year
+lyrnames <- str_extract(files, "\\d{7}")  # 取出影像的时间
+lyryear <- str_sub(lyrnames, 1, 4) # 取出年份
+lyrdoy <- str_sub(lyrnames, 5, 7) # 取出day of the year
 
 names(data) <- lyrnames # 把影像序列按时间重命名
 
@@ -480,10 +483,12 @@ names(data) <- lyrnames # 把影像序列按时间重命名
 # 创建结果输出文件夹
 if (dir.exists("D:/modis/figure/2020doy")==0)  dir.create("D:/modis/figure/2020doy")
 
-# 2020年的影像在整个时间序列中的序号为23*(2020-2012)+1 到 23*(2020-2012) + 24
-for (idx in c((23*(2020-2012)+1) : (23*(2020-2012) + 24))) {
-  # 每次取一个doy的影像
-  dataplot <- data[[idx]]
+for (idx in c(1:23)) {  # 每次取一个doy的影像
+
+    # 2020年的影像在整个时间序列中的序号为23*(2020-2012)+1 到 23*(2020-2012) + 23
+  idx2020 <- 23*(2020-2012)+idx
+  
+  dataplot <- data[[idx2020]]
   
   # 重命名为DOY的值
   doy <- lyrdoy[idx]
@@ -510,7 +515,7 @@ for (idx in c((23*(2020-2012)+1) : (23*(2020-2012) + 24))) {
   ggsave(pngfile, height = 7, width = 2.5)
   
 }
-y <- 
+
 # 生成2020年各DOY(day of year) 的gif动图，用到的是magick package
 imgs <- list.files(path = "D:/modis/figure/2020doy", 
                    pattern = ".png",
@@ -560,7 +565,7 @@ for (year in c(2012:2021)) {
   ggsave(pngfile,height = 6, width = 15)
   
 }
-y
+
 
 # 生成2012-2021年间的分DOY(day of year) gif动图，用到的是magick package
 imgs <- list.files(path = "D:/modis/figure/NDVIyear", 
@@ -591,21 +596,19 @@ image_write(image = img_animated,
 
 </center>
 
-
 <center>
 
 <img src="img/2020.png" width="800"/>
 
 </center>
 
-2. 2012-2021年间NDVI变化总览动图
+2.  2012-2021年间NDVI变化总览动图
 
 <center>
 
 <img src="img/year_NDVI.gif" width="800"/>
 
 </center>
-
 
 ## 3.2 生成物候参数结果影像
 
@@ -710,7 +713,6 @@ write_lines(cmd, "D:/modis/run/season2img.bat")
 
 </center>
 
-
 之后就可以在`cmd`命令行中输入`.bat`文件名进行批处理了:
 
 ```{bash eval=FALSE, include=TRUE}
@@ -741,7 +743,7 @@ if (!require("terra")) install.packages("terra"); library(terra)
 # 获取影像数据文件的路径列表
 files <- list.files(path = "D:/modis/run/pheno_img/TIMESATout",
                     full.names = TRUE) %>%
-  str_subset(".txt|.hdr", negate = T) %>% 
+  str_subset(".txt|.hdr", negate = T) %>% # 排除不想要的txt文件和hdr头文件
   str_subset("season1")
 
 # 生成头文件 -------------------------------------------------------------------
@@ -1142,11 +1144,8 @@ ggsave("D:/modis/figure/Pheno_trend.png", height = 7, width = 15)
 
 </center>
 
-
 ## 4.3 气候敏感性分析
 
 年际波动即为不同年份之间的变化，植被物候的变化与气候因子（气温、降雨、辐射等）变化息息相关，通过分析物候参数的年际波动与气候因子变化之间的关系，可以对植被物候变化进行归因，找出背后的主要驱动因素并量化其敏感性。这部分内容一直以来是气候变化领域的重要研究领域，涉及的内容比较庞大，包括植被指数选取、分析方法选择、气象因子的选取和构建等诸多环节，这里我们不再进行一一计算，感兴趣的同学可以查阅相关参考文献，例如：Jin等分析了[欧洲北部物候变化的驱动因子](https://link.springer.com/article/10.1007/s00484-019-01690-5)，用到了`PPI(Plant Phenology Index)`，针对`NDVI`的饱和效应和积雪背景干扰强问题，`PPI`进行了改进。
 
 **这一问题还可以作为大学生科研项目的选题进行继续探索、研究。**
-
-
